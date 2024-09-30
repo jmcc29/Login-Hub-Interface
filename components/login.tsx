@@ -7,6 +7,10 @@ import { Button } from "@nextui-org/button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"
 
+interface FormData {
+   user: string
+   password: string
+}
 
 const MuserpolLogo = () => (
    <svg
@@ -30,29 +34,78 @@ const classNames = {
       "shadow-xl",
       "backdrop-blur-xl",
       "backdrop-saturate-200"
-      // "bg-deafult-200/50",
-      // "!cursor-text"
    ]
 }
 
 
 export const Login = () => {
    const [ showPassword, setShowPassword ] = useState(false)
-   const [ isAnimating, setIsAnimating ] = useState(false)
+   const [ isAnimating , setIsAnimating  ] = useState(false)
+   const [ isLoading   , setIsLoading    ] = useState(false)
+   const [ formData    , setFormData     ] = useState<FormData>({
+      user: '',
+      password: ''
+   })
+   const [ errors, setErrors ] = useState<Partial<FormData>>({})
+   const togglePasswordVisibility = () => setShowPassword(!showPassword)
+
+   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value, type, checked } = e.target
+      setFormData(prev => ({
+         ...prev,
+         [name]: type === 'checkbox' ? checked: value
+      }))
+      if(errors[name as keyof FormData]) {
+         setErrors(prev => ({ ...prev, [name]: undefined}))
+      }
+   }
+
+   const validateForm = (): Boolean => {
+      const newErrors: Partial<FormData> = {}
+      console.log(formData)
+      if(!formData.user) {
+         newErrors.user = 'El usuario es requerido'
+      } else if (!/^[a-zA-Z]+$/.test(formData.user)) {
+         console.log("usuario con números")
+         newErrors.user = 'El usuario solo debe contener letras'
+      }
+      if(!formData.password) {
+         newErrors.password = 'La contraseña es requerida'
+      } else if (formData.password.length < 6) {
+         newErrors.password = 'La contraseña debe tener 6 caracteres'
+      }
+      setErrors(newErrors)
+      return Object.keys(newErrors).length === 0
+   }
+
+   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      if(!validateForm()) return
+
+      setIsLoading(true)
+      setIsAnimating(true)
+      try {
+      } catch(error) {
+         setIsAnimating(false)
+      } finally {
+         setIsLoading(false)
+      }
+   }
+
    return (
       <AnimatePresence>
          {!isAnimating && (
             <motion.div
                className="flex items-center border-20 justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200"
-               initial={{ opacity: 1 }}
-               exit={{ opacity: 0 }}
-               transition={{ duration: 1, delay: 2}}
+               initial  ={{ opacity: 1 }}
+               exit     ={{ opacity: 0 }}
+               transition={{ duration: 1, delay: 0.5}}
             >
                <motion.div
                   className="flex w-full max-w-4xl bg-white rounded-lg shadow-2xl overflow-hidden"
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 2}}
+                  transition={{ duration: 1}}
                >
                   <motion.div
                      className="hidden lg:block lg:w-1/2 bg-cover bg-center "
@@ -73,7 +126,7 @@ export const Login = () => {
                      transition={{ duration: 1 }}
                   >
                      <Card className="w-full py-2 px-8 border-1" shadow="none" radius="none">
-                        <form className="pb-5">
+                        <form onSubmit={handleSubmit} className="pb-5">
                            <CardHeader className="flex flex-col space-y-1">
                               <MuserpolLogo />
                               <h1 className="flex flex-row text-2xl font-bold text-center">Iniciar sesión</h1>
@@ -90,11 +143,18 @@ export const Login = () => {
                                     placeholder="Ingrese su usuario"
                                     required
                                     radius="sm"
-                                    isInvalid={false}
                                     errorMessage="Por favor ingrese su usuario"
                                     classNames={classNames}
-                                    isClearable
+                                    value={formData.user}
+                                    onChange={handleInputChange}
+                                    aria-invalid={!!errors.user}
+                                    aria-describedby={errors.user ? "user-error": undefined}
                                  />
+                                 {
+                                    errors.user && (
+                                       <p id="user-error" className="text-sm text-red-400">{errors.user}</p>
+                                    )
+                                 }
                               </div>
                               <div className="space-y-2">
                                  <div className="relative">
@@ -103,6 +163,7 @@ export const Login = () => {
                                        name="password"
                                        label="Contraseña"
                                        labelPlacement="outside"
+                                       type={showPassword ? "text" : "password"}
                                        variant="flat"
                                        placeholder="Ingrese su contraseña"
                                        required
@@ -110,8 +171,9 @@ export const Login = () => {
                                        isInvalid={false}
                                        errorMessage="Por favor ingrese su contraseña"
                                        classNames={classNames}
+                                       onChange={handleInputChange}
                                        endContent={
-                                          <button className="focus:outline-none" type="button" onClick={() => {}}>
+                                          <button className="focus:outline-none" type="button" onClick={togglePasswordVisibility}>
                                              {showPassword ? (
                                                 <FontAwesomeIcon className="h-5 w-5" icon={faEye}/>
                                                 ) : (
@@ -119,12 +181,25 @@ export const Login = () => {
                                              )}
                                           </button>
                                        }
+                                       value={formData.password}
+                                       aria-invalid={!!errors.password}
+                                       aria-describedby={errors.password ? "password-error" : undefined}
                                     />
                                  </div>
+                                 {
+                                    errors.password && (
+                                       <p id="password-error" className="text-sm text-red-400">{errors.password}</p>
+                                    )
+                                 }
                               </div>
                               <div className="shadow-xl">
-                                 <Button variant="flat" className="space-y-4 w-full bg-lime-700 text-white font-bold" type="submit">
-                                    INICIAR SESIÓN
+                                 <Button
+                                    variant="flat"
+                                    className="space-y-4 w-full bg-lime-700 text-white font-bold"
+                                    type="submit"
+                                    disabled={isLoading}
+                                 >
+                                    { isLoading ? "Iniciado sesión..." : "INICIAR SESIÓN"}
                                  </Button>
                               </div>
                            </CardBody>
