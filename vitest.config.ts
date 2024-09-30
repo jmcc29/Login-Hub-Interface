@@ -12,6 +12,14 @@ export default defineConfig({
       }
    },
    test: {
-      environment: 'jsdom'
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: ["vitestSetup.ts"],
+      onConsoleLog(log: string, type: 'stdout' | 'stderr'): boolean | void {
+         if(log.includes('Warning:') && type === 'stderr') {
+            return false
+         }
+         return true
+      },
    }
 })
