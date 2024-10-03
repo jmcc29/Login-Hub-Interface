@@ -80,8 +80,30 @@ export const Login = () => {
 
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
+      console.log("login")
       if(!validateForm()) return
-
+      const response = await fetch('http://192.168.2.90:3000/api/auth/login', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            username: formData.user,
+            password: formData.password
+         })
+      })
+      const data = await response.json()
+      console.log(data.access_token)
+      console.log("antes de redirigir")
+      // @ts-ignorek
+      if(data.access_token) {
+         // pedir redirección
+         console.log("despues de redirigir")
+         await fetch('http://192.168.2.90:3000/api/auth/redirect', {
+            method: 'POST',
+            body: JSON.stringify({})
+         })
+      }
       setIsLoading(true)
       setIsAnimating(true)
       try {
