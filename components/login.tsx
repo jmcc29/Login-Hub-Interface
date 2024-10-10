@@ -6,6 +6,8 @@ import { Input } from "@nextui-org/input"
 import { Button } from "@nextui-org/button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"
+import { loginUp } from "@/app/service"
+import { apiClient, apiServerFrontend } from "@/services"
 
 interface FormData {
    user: string
@@ -62,7 +64,6 @@ export const Login = () => {
 
    const validateForm = (): Boolean => {
       const newErrors: Partial<FormData> = {}
-      console.log(formData)
       if(!formData.user) {
          newErrors.user = 'El usuario es requerido'
       } else if (!/^[a-zA-Z]+$/.test(formData.user)) {
@@ -80,29 +81,17 @@ export const Login = () => {
 
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
-      console.log("login")
       if(!validateForm()) return
-      const response = await fetch('http://192.168.2.90:3000/api/auth/login', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
-            username: formData.user,
-            password: formData.password
-         })
-      })
+      const response = await apiServerFrontend.POST('/api/auth/', { username: formData.user, password: formData.password })
       const data = await response.json()
-      console.log(data.access_token)
-      console.log("antes de redirigir")
-      // @ts-ignorek
-      if(data.access_token) {
-         // pedir redirección
-         console.log("despues de redirigir")
-         await fetch('http://192.168.2.90:3000/api/auth/redirect', {
-            method: 'POST',
-            body: JSON.stringify({})
-         })
+      if (!data.error) {
+         setTimeout(() => {
+            window.location.href = data.redirect;
+         }, 1000);
+      } else {
+         setTimeout(() => {
+            window.location.href = data.redirect;
+         }, 1000);
       }
       setIsLoading(true)
       setIsAnimating(true)
