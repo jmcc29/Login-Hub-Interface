@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   const { username, password } = await req.json();
 
-  const host = process.env.NEXT_PUBLIC_BACKEND_HOST || 'localhost';
-  const loginPort = process.env.LOGIN_FRONTEND_PORT || 3002;
+  const host = process.env.NEXT_PUBLIC_SERVER_FRONTEND || 'localhost';
+  const loginPort = process.env.NEXT_PUBLIC_SERVER_PORT_FRONTEND || 3002;
   const beneficiariePort = process.env.BENEFICIARIE_FRONTEND_PORT || 3001;
 
   try {
