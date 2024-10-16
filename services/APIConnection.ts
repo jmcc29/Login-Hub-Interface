@@ -39,8 +39,7 @@ export abstract class APIConnection {
       const contentType = response.headers.get("content-type") || ""
       if(!response.ok) {
          if (contentType.includes("application/json")) {
-            const errorData = await response.json()
-            throw new Error(errorData.message || `HTTP error! Status: ${response.status}`)
+            return response
          }
          const errorData = await response.json()
          throw new Error(errorData.message || `HTTP error! Status: ${response.status}`)

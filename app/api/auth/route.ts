@@ -1,39 +1,46 @@
-import { apiClient } from '@/services';
-import { NextResponse } from 'next/server';
+import { apiClient }    from "@/services"
+import { NextResponse } from "next/server"
 
-export async function POST(req: Request) {
-  const { username, password } = await req.json();
+export async function POST(request: Request) {
+   const { username, password } = await request.json()
+   try {
+      const response = await apiClient.POST('api/auth/login', { username, password }) // Realizamos la petición
+      const statusCode = response.status         // obtenemos su código de estado
 
-  const host = process.env.NEXT_PUBLIC_SERVER_FRONTEND || 'localhost';
-  const loginPort = process.env.NEXT_PUBLIC_SERVER_PORT_FRONTEND || 3002;
-  const beneficiariePort = process.env.BENEFICIARIE_FRONTEND_PORT || 3001;
+      if(statusCode >= 500) {
+         return NextResponse.json({
+            error: true,
+            message: 'Hubo un error en el servicio.'
+         }, { status: statusCode })
+      }
 
-  try {
-    const response = await apiClient.POST('api/auth/login', {
-      username,
-      password,
-    });
+      const responseData = await response.json()
 
-    const setCookieHeader = response.headers.get('cookie') || '';
+      if(statusCode >= 400) {
+         return NextResponse.json({
+            error: true,
+            message: responseData.message
+         }, { status: statusCode } )
+      }
 
-    if (!setCookieHeader) {
-      return NextResponse.json(
-        { error: true, redirect: `http://${host}:${loginPort}/` },
-        { status: 400 },
-      ); // login
-    }
-    const nextResponse = NextResponse.json(
-      {
-        error: false,
-        redirect: `http://${host}:${beneficiariePort}/`,
-        message: 'Login successful',
-      },
-      { status: 200 },
-    );
-    nextResponse.headers.set('Set-Cookie', setCookieHeader);
-    return nextResponse;
-  } catch (error: any) {
-    console.log(error);
-    return NextResponse.json({ message: error.message }, { status: 500 });
-  }
+      const setCookieHeader = response.headers.get('cookie') || ''
+
+      if(!setCookieHeader) {
+         return NextResponse.json({ //? funciona?
+            error: true,
+            message: responseData.message
+         }, { status: 400 })
+      }
+      const nextResponse = NextResponse.json({
+         error: false,
+         message: 'Login successful'
+      }, { status: 200 })
+
+      nextResponse.headers.set('Set-Cookie', setCookieHeader)
+      return nextResponse
+
+   } catch(error: any) {
+      console.error(error)
+      return NextResponse.json({ error: true, message: error.message }, { status: 500 })
+   }
 }
