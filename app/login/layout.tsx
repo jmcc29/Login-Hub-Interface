@@ -1,13 +1,9 @@
-import AlertProvider from "@/context/AlertProvider"
+import AlertProvider from "@/context/AlertProvider";
 
 export default function LoginLayout({
-   children,
+  children,
 }: {
-   children: React.ReactNode
+  children: React.ReactNode;
 }) {
-   return (
-      <AlertProvider>
-         { children }
-      </AlertProvider>
-   )
+  return <AlertProvider>{children}</AlertProvider>;
 }
