@@ -2,16 +2,26 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
+const setCorsHeaders = (response: NextResponse) => {
+  response.headers.set("Access-Control-Allow-Origin", process.env.ACCESS_CONTROL_ALLOW_ORIGIN!);
+  response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, next-action, next-router-state-tree");
+  response.headers.set("Access-Control-Allow-Credentials", "true");
+};
+
 export const middleware = (req: NextRequest) => {
+
   const response = NextResponse.next()
+  setCorsHeaders(response)
+
+  if(req.method === "OPTIONS") {
+    return response
+  }
+
   const cookieStore = cookies();
   const cookie = cookieStore.get("Set-Cookie");
   const token = cookie?.value;
   // console.log(`token middleware 🔐: ${token}`, req.nextUrl.pathname)
-
-  response.headers.set("Access-Control-Allow-Origin", "http://192.168.2.201:3001")
-  response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
   try {
     if (req.nextUrl.pathname == "/") {
