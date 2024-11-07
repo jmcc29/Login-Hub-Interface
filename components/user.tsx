@@ -8,7 +8,6 @@ export default function UserComponent () {
   const handleLogout = async () => {
     const response = await apiServerFrontend.POST('/api/logout', {
     })
-    console.log(response)
     if(response.ok) {
       window.location.reload();
     }

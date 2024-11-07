@@ -22,11 +22,14 @@ export async function POST(request: Request) {
 
     const responseData = await response.json();
 
+    console.log("Response data: ", responseData)
+
     if (statusCode >= 400) {
       return NextResponse.json(
         {
           error: true,
           message: responseData.message,
+          user: responseData.user
         },
         { status: statusCode },
       );

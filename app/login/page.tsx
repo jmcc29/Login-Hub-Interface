@@ -79,7 +79,7 @@ export default function Login() {
     try {
       e.preventDefault();
       if (!validateForm()) return;
-      const response = await apiServerFrontend.POST("/api/auth/", {
+      const response = await apiServerFrontend.POST("/api/login/", {
         username: formData.user,
         password: formData.password,
       });
