@@ -1,2 +1,1 @@
-
-export * from './FetchServiceFactory'
+export * from "./FetchServiceFactory";
