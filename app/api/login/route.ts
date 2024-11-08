@@ -22,11 +22,14 @@ export async function POST(request: Request) {
 
     const responseData = await response.json();
 
+    console.log("Response data: ", responseData)
+
     if (statusCode >= 400) {
       return NextResponse.json(
         {
           error: true,
           message: responseData.message,
+          user: responseData.user
         },
         { status: statusCode },
       );
@@ -56,7 +59,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(
-      { error: true, message: error.message },
+      { error: true, message: "Hubo un error en el servicio" },
       { status: 500 },
     );
   }

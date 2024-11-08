@@ -1,5 +1,6 @@
 export type ComputerTools = typeof computerTools;
 
+// TODO debería ser una API
 export const computerTools = [
   {
     name: "Beneficiarios",
