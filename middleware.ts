@@ -19,7 +19,7 @@ export const middleware = (req: NextRequest) => {
   }
 
   const cookieStore = cookies();
-  const cookie = cookieStore.get("Set-Cookie");
+  const cookie = cookieStore.get("msp");
   const token = cookie?.value;
   // console.log(`token middleware 🔐: ${token}`, req.nextUrl.pathname)
 

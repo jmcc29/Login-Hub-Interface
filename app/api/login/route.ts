@@ -16,26 +16,26 @@ export async function POST(request: Request) {
           error: true,
           message: "Hubo un error en el servicio.",
         },
-        { status: statusCode },
+        { status: statusCode }
       );
     }
 
     const responseData = await response.json();
 
-    console.log("Response data: ", responseData)
+    console.log("Response data: ", responseData);
 
     if (statusCode >= 400) {
       return NextResponse.json(
         {
           error: true,
           message: responseData.message,
-          user: responseData.user
+          user: responseData.user,
         },
-        { status: statusCode },
+        { status: statusCode }
       );
     }
 
-    const setCookieHeader = response.headers.get("cookie") || "";
+    const setCookieHeader = response.headers.get("Set-Cookie") || "";
 
     if (!setCookieHeader) {
       return NextResponse.json(
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
           error: true,
           message: responseData.message,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
     const nextResponse = NextResponse.json(
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         error: false,
         message: "Login successful",
       },
-      { status: 200 },
+      { status: 200 }
     );
 
     nextResponse.headers.set("Set-Cookie", setCookieHeader);
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     console.error(error);
     return NextResponse.json(
       { error: true, message: "Hubo un error en el servicio" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
