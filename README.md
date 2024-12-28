@@ -51,3 +51,18 @@ After modifying the `.npmrc` file, you need to run `pnpm install` again to ensur
 ## License
 
 Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+
+
+# Despliegue
+
+### PASO 1
+construir la imagen con:
+´´´
+docker build -t my-nextjs-app-dev .
+
+´´´
+
+´´´
+docker run -p 4000:4000 -v $(pwd):/app my-nextjs-app-dev
+
+´´´
