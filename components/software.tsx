@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@nextui-org/button";
-import { Card, CardFooter, CardHeader } from "@nextui-org/card";
-import { Image } from "@nextui-org/image";
+import { Button } from "@heroui/button";
+import { Card, CardFooter, CardHeader } from "@heroui/card";
+import { Image } from "@heroui/image";
 
 interface SoftwareProps {
   name: string;

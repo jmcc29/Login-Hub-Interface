@@ -3,7 +3,7 @@ import {
   NavbarContent,
   NavbarBrand,
   NavbarItem,
-} from '@nextui-org/navbar';
+} from "@heroui/navbar";
 import NextLink from 'next/link';
 
 import { ThemeSwitch } from '@/components/theme-switch';

@@ -1,7 +1,7 @@
 "use client";
 import { apiServerFrontend } from "@/services";
-import { Avatar } from "@nextui-org/avatar";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
+import { Avatar } from "@heroui/avatar";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
 
 export default function UserComponent () {
 
