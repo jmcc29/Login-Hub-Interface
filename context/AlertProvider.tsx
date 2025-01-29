@@ -10,5 +10,6 @@ interface FullScreenProviderContextType {
 export default function AlertProvider({
   children,
 }: FullScreenProviderContextType) {
+  // @ts-ignore
   return <SnackbarProvider maxSnack={1}>{children}</SnackbarProvider>;
 }
