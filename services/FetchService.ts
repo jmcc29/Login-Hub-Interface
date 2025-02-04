@@ -7,13 +7,16 @@ export class FetchService extends APIConnection {
 
   async GET(endpoint: string, params?: Record<string, string>): Promise<any> {
     let url = endpoint;
+
     if (params) {
       const queryParams = new URLSearchParams(params).toString();
+
       url += `?${queryParams}`;
     }
     const requestConfig = this.addInterceptors({
       method: "GET",
     });
+
     return this.handleRequest(url, requestConfig);
   }
 
@@ -23,6 +26,7 @@ export class FetchService extends APIConnection {
       credentials: "include",
       body: JSON.stringify(body),
     });
+
     return this.handleRequest(endpoint, requestConfig);
   }
 
@@ -31,12 +35,14 @@ export class FetchService extends APIConnection {
       method: "PUT",
       body: JSON.stringify(body),
     });
+
     return this.handleRequest(endpoint, requestConfig);
   }
   async DELETE(endpoint: string): Promise<any> {
     const requestConfig = this.addInterceptors({
       method: "DELETE",
     });
+
     return this.handleRequest(endpoint, requestConfig);
   }
 }

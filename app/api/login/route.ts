@@ -1,8 +1,10 @@
-import { apiClient } from "@/services";
 import { NextResponse } from "next/server";
+
+import { apiClient } from "@/services";
 
 export async function POST(request: Request) {
   const { username, password } = await request.json();
+
   try {
     const response = await apiClient.POST("api/auth/login", {
       username,
@@ -16,7 +18,7 @@ export async function POST(request: Request) {
           error: true,
           message: "Hubo un error en el servicio.",
         },
-        { status: statusCode }
+        { status: statusCode },
       );
     }
 
@@ -31,7 +33,7 @@ export async function POST(request: Request) {
           message: responseData.message,
           user: responseData.user,
         },
-        { status: statusCode }
+        { status: statusCode },
       );
     }
 
@@ -43,7 +45,7 @@ export async function POST(request: Request) {
           error: true,
           message: responseData.message,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const nextResponse = NextResponse.json(
@@ -51,16 +53,18 @@ export async function POST(request: Request) {
         error: false,
         message: "Login successful",
       },
-      { status: 200 }
+      { status: 200 },
     );
 
     nextResponse.headers.set("Set-Cookie", setCookieHeader);
+
     return nextResponse;
   } catch (error: any) {
     console.error(error);
+
     return NextResponse.json(
       { error: true, message: "Hubo un error en el servicio" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

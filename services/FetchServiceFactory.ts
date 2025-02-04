@@ -21,6 +21,7 @@ const port = process.env.NEXT_PUBLIC_BACKEND_PORT || 3080;
 const baseUrl = `http://${host}:${port}/`;
 
 const factory = new FetchServiceFactory(baseUrl);
+
 export const apiClient = factory.createAPIConnection();
 
 const hostFrontend = process.env.NEXT_PUBLIC_SERVER_FRONTEND || "localhost";
@@ -29,4 +30,5 @@ const portFrontend = process.env.NEXT_PUBLIC_SERVER_PORT_FRONTEND || 3000;
 const baseURLFrontend = `http://${hostFrontend}:${portFrontend}/`;
 
 const factoryFrontend = new FetchServiceFactory(baseURLFrontend);
+
 export const apiServerFrontend = factoryFrontend.createAPIConnection();
