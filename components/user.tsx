@@ -1,17 +1,22 @@
 "use client";
-import { apiServerFrontend } from "@/services";
 import { Avatar } from "@heroui/avatar";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/dropdown";
 
-export default function UserComponent () {
+import { apiServerFrontend } from "@/services";
 
+export default function UserComponent() {
   const handleLogout = async () => {
-    const response = await apiServerFrontend.POST('/api/logout', {
-    })
-    if(response.ok) {
+    const response = await apiServerFrontend.POST("/api/logout", {});
+
+    if (response.ok) {
       window.location.reload();
     }
-  }
+  };
 
   return (
     <Dropdown placement="bottom-start">
@@ -29,5 +34,5 @@ export default function UserComponent () {
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
-  )
+  );
 }

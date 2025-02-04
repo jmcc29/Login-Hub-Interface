@@ -6,8 +6,9 @@ import { Input } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { apiServerFrontend } from "@/services";
 import { useRouter } from "next/navigation";
+
+import { apiServerFrontend } from "@/services";
 import { useAlert } from "@/hooks/useAlerts";
 
 interface FormData {
@@ -17,11 +18,11 @@ interface FormData {
 
 const MuserpolLogo = () => (
   <svg
+    className="flex flex-row w-full h-20 m-2"
     viewBox="0 0 200 60"
     xmlns="https://www.w3.org/2000/svg"
-    className="flex flex-row w-full h-20 m-2"
   >
-    <image href="muserpol-logo.png" x="10" y="-8" width="180" height="80" />
+    <image height="80" href="muserpol-logo.png" width="180" x="10" y="-8" />
   </svg>
 );
 
@@ -50,6 +51,7 @@ export default function Login() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -61,6 +63,7 @@ export default function Login() {
 
   const validateForm = (): Boolean => {
     const newErrors: Partial<FormData> = {};
+
     if (!formData.user) {
       newErrors.user = "El usuario es requerido";
     } else if (!/^[a-zA-Z]+$/.test(formData.user)) {
@@ -72,6 +75,7 @@ export default function Login() {
       newErrors.password = "La contraseña debe tener 6 caracteres";
     }
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -84,6 +88,7 @@ export default function Login() {
         password: formData.password,
       });
       const data = await response.json();
+
       if (!data.error) {
         setTimeout(() => {
           handleRedirect();
@@ -107,39 +112,39 @@ export default function Login() {
       {!isAnimating && (
         <motion.div
           className="flex items-center border-20 justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200"
-          initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          initial={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
           <motion.div
             className="flex w-full max-w-4xl bg-white rounded-lg shadow-2xl overflow-hidden"
-            initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            initial={{ opacity: 1 }}
             transition={{ duration: 1 }}
           >
             <motion.div
-              className="hidden lg:block lg:w-1/2 bg-cover bg-center "
-              initial={{ opacity: 0, x: 0 }}
               animate={{ opacity: 1, x: 0 }}
+              className="hidden lg:block lg:w-1/2 bg-cover bg-center "
               exit={{ x: 0, width: "100%" }}
-              transition={{ duration: 1 }}
+              initial={{ opacity: 0, x: 0 }}
               style={{
                 backgroundImage: "url('muserpol.jpg')",
               }}
-            ></motion.div>
+              transition={{ duration: 1 }}
+            />
             <motion.div
-              className="w-full lg:w-1/2 p-8"
-              initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
+              className="w-full lg:w-1/2 p-8"
               exit={{ x: -50, opacity: 0 }}
+              initial={{ opacity: 0, x: 50 }}
               transition={{ duration: 1 }}
             >
               <Card
                 className="w-full py-2 px-8 border-1"
-                shadow="none"
                 radius="none"
+                shadow="none"
               >
-                <form onSubmit={handleSubmit} className="pb-5">
+                <form className="pb-5" onSubmit={handleSubmit}>
                   <CardHeader className="flex flex-col space-y-1">
                     <MuserpolLogo />
                     <h1 className="flex flex-row text-2xl font-bold text-center">
@@ -149,26 +154,26 @@ export default function Login() {
                   <CardBody className="space-y-4">
                     <div className="space-y-2">
                       <Input
+                        required
+                        aria-describedby={
+                          errors.user ? "user-error" : undefined
+                        }
+                        aria-invalid={!!errors.user}
+                        classNames={classNames}
+                        errorMessage="Por favor ingrese su usuario"
                         id="user"
                         label="Usuario"
                         labelPlacement="outside"
                         name="user"
-                        type="text"
-                        variant="flat"
                         placeholder="Ingrese su usuario"
-                        required
                         radius="sm"
-                        errorMessage="Por favor ingrese su usuario"
-                        classNames={classNames}
+                        type="text"
                         value={formData.user}
+                        variant="flat"
                         onChange={handleInputChange}
-                        aria-invalid={!!errors.user}
-                        aria-describedby={
-                          errors.user ? "user-error" : undefined
-                        }
                       />
                       {errors.user && (
-                        <p id="user-error" className="text-sm text-red-400">
+                        <p className="text-sm text-red-400" id="user-error">
                           {errors.user}
                         </p>
                       )}
@@ -176,19 +181,12 @@ export default function Login() {
                     <div className="space-y-2">
                       <div className="relative">
                         <Input
-                          id="password"
-                          name="password"
-                          label="Contraseña"
-                          labelPlacement="outside"
-                          type={showPassword ? "text" : "password"}
-                          variant="flat"
-                          placeholder="Ingrese su contraseña"
                           required
-                          radius="sm"
-                          isInvalid={false}
-                          errorMessage="Por favor ingrese su contraseña"
+                          aria-describedby={
+                            errors.password ? "password-error" : undefined
+                          }
+                          aria-invalid={!!errors.password}
                           classNames={classNames}
-                          onChange={handleInputChange}
                           endContent={
                             <button
                               className="focus:outline-none"
@@ -208,25 +206,32 @@ export default function Login() {
                               )}
                             </button>
                           }
+                          errorMessage="Por favor ingrese su contraseña"
+                          id="password"
+                          isInvalid={false}
+                          label="Contraseña"
+                          labelPlacement="outside"
+                          name="password"
+                          placeholder="Ingrese su contraseña"
+                          radius="sm"
+                          type={showPassword ? "text" : "password"}
                           value={formData.password}
-                          aria-invalid={!!errors.password}
-                          aria-describedby={
-                            errors.password ? "password-error" : undefined
-                          }
+                          variant="flat"
+                          onChange={handleInputChange}
                         />
                       </div>
                       {errors.password && (
-                        <p id="password-error" className="text-sm text-red-400">
+                        <p className="text-sm text-red-400" id="password-error">
                           {errors.password}
                         </p>
                       )}
                     </div>
                     <div className="shadow-xl">
                       <Button
-                        variant="flat"
                         className="space-y-4 w-full bg-lime-700 text-white font-bold"
-                        type="submit"
                         disabled={isLoading}
+                        type="submit"
+                        variant="flat"
                       >
                         {isLoading ? "Iniciado sesión..." : "INICIAR SESIÓN"}
                       </Button>

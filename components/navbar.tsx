@@ -4,12 +4,10 @@ import {
   NavbarBrand,
   NavbarItem,
 } from "@heroui/navbar";
-import NextLink from 'next/link';
+import NextLink from "next/link";
 
-import { ThemeSwitch } from '@/components/theme-switch';
-import { Logo } from '@/components/icons';
-import UserComponent from '@/components/user';
-
+import { Logo } from "@/components/icons";
+import UserComponent from "@/components/user";
 
 export const Navbar = () => {
   return (
@@ -23,11 +21,14 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
+      <NavbarContent
+        className="hidden sm:flex basis-1/5 sm:basis-full"
+        justify="end"
+      >
         <NavbarItem className="hidden sm:flex gap-2">
           {/* <ThemeSwitch /> */}
         </NavbarItem>
-        <UserComponent/>
+        <UserComponent />
       </NavbarContent>
     </NextUINavbar>
   );

@@ -32,14 +32,14 @@ export default function Software(props: SoftwareProps) {
         removeWrapper
         alt="Card example background"
         className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-        src={ image ?? "https://nextui.org/images/card-example-6.jpeg" }
+        src={image ?? "https://nextui.org/images/card-example-6.jpeg"}
       />
       <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
         <Button
-          onClick={() => handleExternalRedirect(url)}
           className="text-tiny bg-lime-700 text-white font-bold"
           radius="sm"
           size="sm"
+          onClick={() => handleExternalRedirect(url)}
         >
           Producción
         </Button>

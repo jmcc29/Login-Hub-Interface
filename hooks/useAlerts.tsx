@@ -25,13 +25,14 @@ export const useAlert = () => {
       action: (key) => (
         <FontAwesomeIcon
           className="h-3 w-3 p-4"
+          icon={faXmark}
           onClick={() => {
             closeSnackbar(key);
           }}
-          icon={faXmark}
         />
       ),
     });
   };
+
   return { Alert };
 };

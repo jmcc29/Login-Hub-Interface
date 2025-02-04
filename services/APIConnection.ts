@@ -22,6 +22,7 @@ export abstract class APIConnection {
       },
       body: requestConfig.body,
     };
+
     return {
       ...requestConfig,
       headers: {
@@ -39,15 +40,18 @@ export abstract class APIConnection {
     const url = this.buildUrl(endpoint);
     const response = await fetch(url, requestConfig);
     const contentType = response.headers.get("content-type") || "";
+
     if (!response.ok) {
       if (contentType.includes("application/json")) {
         return response;
       }
       const errorData = await response.json();
+
       throw new Error(
         errorData.message || `HTTP error! Status: ${response.status}`,
       );
     }
+
     return response;
   }
 }
