@@ -453,6 +453,18 @@
     "@react-types/overlays" "3.8.11"
     "@react-types/shared" "3.26.0"
 
+"@heroui/avatar@2.2.10":
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/@heroui/avatar/-/avatar-2.2.10.tgz#54e2c536206e56e0c6377a3160c7686ea6aeedb2"
+  integrity sha512-SNobf126rgJW2BJQ5y3v/4HPT8C/94sHCyd77WepAX773g0URsMQJCGbzqZ9vQ6MSRxDDTTEG+HsnNXUbu4nag==
+  dependencies:
+    "@heroui/react-utils" "2.1.7"
+    "@heroui/shared-utils" "2.1.6"
+    "@heroui/use-image" "2.1.6"
+    "@react-aria/focus" "3.19.1"
+    "@react-aria/interactions" "3.23.0"
+    "@react-aria/utils" "3.27.0"
+
 "@heroui/avatar@2.2.7":
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/@heroui/avatar/-/avatar-2.2.7.tgz#a450ea33adb4b1ea12ae9bf260edc8b271a8c0c1"
@@ -695,6 +707,11 @@
   resolved "https://registry.yarnpkg.com/@heroui/react-rsc-utils/-/react-rsc-utils-2.1.2.tgz#02c463a612034b1abe0d437f9a076759b532e370"
   integrity sha512-5qaYUj0eX+y8OFvPsv01RdfHZv8Z/do+3tdaDmq/uNFsyDc+lgea9PyqVZbhv6nf4ido/hUlPDB6KAGqiAeKwQ==
 
+"@heroui/react-rsc-utils@2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@heroui/react-rsc-utils/-/react-rsc-utils-2.1.5.tgz#bf348a6ce7bcc6cc36bce1b74ac371bbcde48dcb"
+  integrity sha512-vSGU2Ua7lnaPfpd+jsrCV4EdrYYnViSDF1tDDplnAZmItNV0qrEMdWe8l5ljwV658fr2LayN/hFjlhADEEjXSg==
+
 "@heroui/react-utils@2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@heroui/react-utils/-/react-utils-2.1.4.tgz#e354296295aebf8f23e6c4286dd98798c5b7ed4f"
@@ -702,6 +719,14 @@
   dependencies:
     "@heroui/react-rsc-utils" "2.1.2"
     "@heroui/shared-utils" "2.1.3"
+
+"@heroui/react-utils@2.1.7":
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/@heroui/react-utils/-/react-utils-2.1.7.tgz#8953f97109630d176246c3356b35670a0c0e14e8"
+  integrity sha512-ZjiRMIh5Mg7fhs1QDjhRvq19HncATm3FIE+mtM3wWT7MwEr46KwHbHC2rhuGlBz9cYHCnJxGMibMAnUgl7qeaQ==
+  dependencies:
+    "@heroui/react-rsc-utils" "2.1.5"
+    "@heroui/shared-utils" "2.1.6"
 
 "@heroui/ripple@2.2.8":
   version "2.2.8"
@@ -721,6 +746,11 @@
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@heroui/shared-utils/-/shared-utils-2.1.3.tgz#317403e8d56f7cc90953fa46386286b6b0f85502"
   integrity sha512-MNpo+jcu6xyicSRyxWgL4rNw4xH0XziUR/bhs01GydlGhfFN8n/Y4vKAWfL5xamehiEJX1N0IKAbFadt3wlGAA==
+
+"@heroui/shared-utils@2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@heroui/shared-utils/-/shared-utils-2.1.6.tgz#65c01b820da32c9bf886943956bcb7d0b55e3083"
+  integrity sha512-Qz6/gyVM+jur+FOnALJBCp6YWt2CCnGu/c3SpxTx7/X9NgqLb+VYZ6XMH1HD9Sf3UzjtHZ/My1Cy6nlw1iO+zw==
 
 "@heroui/snippet@2.2.11":
   version "2.2.11"
@@ -853,6 +883,14 @@
     "@heroui/react-utils" "2.1.4"
     "@heroui/use-safe-layout-effect" "2.1.2"
 
+"@heroui/use-image@2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@heroui/use-image/-/use-image-2.1.6.tgz#0599d474ff993330647079762ba2b4e04434124d"
+  integrity sha512-PVYB4zBC4E4Tne0nZqypTIXtmVx0cJuzQaJ510oq/EvUPbmlpzSjOE9cF3HJ8p5kKDPny0s/7cO+H5olG6CZDQ==
+  dependencies:
+    "@heroui/react-utils" "2.1.7"
+    "@heroui/use-safe-layout-effect" "2.1.5"
+
 "@heroui/use-is-mobile@2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@heroui/use-is-mobile/-/use-is-mobile-2.2.3.tgz#3079e56fda9dc60472840e7ad25c2c9e9f152e9b"
@@ -870,10 +908,26 @@
   resolved "https://registry.yarnpkg.com/@heroui/use-safe-layout-effect/-/use-safe-layout-effect-2.1.2.tgz#3b4dfd4f959c025e2c804c77afe853535c91f9c6"
   integrity sha512-AVfgvaO2zw30JDKj1LyFPzz+JULMygC/TUK/5g4YA3O/4OwgS8lT8XRNM721zwmYkntFPBx7lYcIRcm8hPWkXA==
 
+"@heroui/use-safe-layout-effect@2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@heroui/use-safe-layout-effect/-/use-safe-layout-effect-2.1.5.tgz#af14e23e762b2998dfda86f7802b8ba4eccdfd26"
+  integrity sha512-gckyAsI8Obd+KQvfW4LOV5bDplCZCH4BkpC+FHHyXd5hc802DbE/SWfVRecnmhXKFnx+DJn11Ua1wV4/mZ22Kg==
+
 "@heroui/use-scroll-position@2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@heroui/use-scroll-position/-/use-scroll-position-2.1.2.tgz#b1bcfd48a28a22609f75024fb59db74d367c8b53"
   integrity sha512-ALO/zuGekxWE4+ikd7XPwvLdJMwmPR9XgCsXtenklfPLDVf9Fu1L9E20RW6hSxf96NfwXZIH+hZ5kI4EB2CiYQ==
+
+"@heroui/user@^2.2.10":
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/@heroui/user/-/user-2.2.10.tgz#ba40b41333005ec5e5fb4b5aaea3c2fa035f3b69"
+  integrity sha512-qIWzIiUPUtSCJWxEjtyc3mnNPZCE2E4EiIZkKNm7IcYfTOms9+qnin8in66IO6/o34san+FFPtMnu4vcHCOqRw==
+  dependencies:
+    "@heroui/avatar" "2.2.10"
+    "@heroui/react-utils" "2.1.7"
+    "@heroui/shared-utils" "2.1.6"
+    "@react-aria/focus" "3.19.1"
+    "@react-aria/utils" "3.27.0"
 
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
@@ -1212,7 +1266,7 @@
     "@swc/helpers" "^0.5.0"
     clsx "^2.0.0"
 
-"@react-aria/focus@^3.19.0", "@react-aria/focus@^3.19.1":
+"@react-aria/focus@3.19.1", "@react-aria/focus@^3.19.0", "@react-aria/focus@^3.19.1":
   version "3.19.1"
   resolved "https://registry.yarnpkg.com/@react-aria/focus/-/focus-3.19.1.tgz#6655e53d04eb7b46c8d39e671013d1c17fca5ba2"
   integrity sha512-bix9Bu1Ue7RPcYmjwcjhB14BMu2qzfJ3tMQLqDc9pweJA66nOw8DThy3IfVr8Z7j2PHktOLf9kcbiZpydKHqzg==
@@ -1272,7 +1326,7 @@
     "@react-types/shared" "^3.26.0"
     "@swc/helpers" "^0.5.0"
 
-"@react-aria/interactions@^3.22.5", "@react-aria/interactions@^3.23.0":
+"@react-aria/interactions@3.23.0", "@react-aria/interactions@^3.22.5", "@react-aria/interactions@^3.23.0":
   version "3.23.0"
   resolved "https://registry.yarnpkg.com/@react-aria/interactions/-/interactions-3.23.0.tgz#28fce22310faeaa114978728045fb2b4fe80acc8"
   integrity sha512-0qR1atBIWrb7FzQ+Tmr3s8uH5mQdyRH78n0krYaG8tng9+u1JlSi8DGRSaC9ezKyNB84m7vHT207xnHXGeJ3Fg==
@@ -1466,7 +1520,7 @@
     "@swc/helpers" "^0.5.0"
     clsx "^2.0.0"
 
-"@react-aria/utils@^3.26.0", "@react-aria/utils@^3.27.0":
+"@react-aria/utils@3.27.0", "@react-aria/utils@^3.26.0", "@react-aria/utils@^3.27.0":
   version "3.27.0"
   resolved "https://registry.yarnpkg.com/@react-aria/utils/-/utils-3.27.0.tgz#92a58177c60055bb007c2e886d2d914f42df2386"
   integrity sha512-p681OtApnKOdbeN8ITfnnYqfdHS0z7GE+4l8EXlfLnr70Rp/9xicBO6d2rU+V/B3JujDw2gPWxYKEnEeh0CGCw==
