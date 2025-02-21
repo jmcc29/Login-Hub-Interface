@@ -36,17 +36,10 @@ export default function Software(props: SoftwareProps) {
       />
       <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
         <Button
-          className="text-tiny bg-lime-700 text-white font-bold"
+          className="w-full text-tiny bg-gray-700 text-white font-bold"
           radius="sm"
           size="sm"
-          onClick={() => handleExternalRedirect(url)}
-        >
-          Producción
-        </Button>
-        <Button
-          className="text-tiny bg-gray-700 text-white font-bold"
-          radius="sm"
-          size="sm"
+          onPress={() => handleExternalRedirect(url)}
         >
           Versión de Pruebas
         </Button>
