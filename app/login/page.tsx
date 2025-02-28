@@ -1,30 +1,21 @@
 "use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
-import { Button } from "@heroui/button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { apiServerFrontend } from "@/services";
 import { useAlert } from "@/hooks/useAlerts";
+import { MuserpolLogo } from "@/components/icons";
 
 interface FormData {
   user: string;
   password: string;
 }
-
-const MuserpolLogo = () => (
-  <svg
-    className="flex flex-row w-full h-20 m-2"
-    viewBox="0 0 200 60"
-    xmlns="https://www.w3.org/2000/svg"
-  >
-    <image height="80" href="muserpol-logo.png" width="180" x="10" y="-8" />
-  </svg>
-);
 
 const classNames = {
   label: "text-black font-bold text-lg/2",
@@ -111,20 +102,26 @@ export default function Login() {
     <AnimatePresence>
       {!isAnimating && (
         <motion.div
-          className="flex items-center border-20 justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200"
+          {...{
+            className:
+              "flex items-center border-20 justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200",
+          }}
           exit={{ opacity: 0 }}
           initial={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
           <motion.div
-            className="flex w-full max-w-4xl bg-white rounded-lg shadow-2xl overflow-hidden"
+            {...{
+              className:
+                "flex w-full max-w-4xl bg-white rounded-lg shadow-2xl overflow-hidden",
+            }}
             exit={{ opacity: 0 }}
             initial={{ opacity: 1 }}
             transition={{ duration: 1 }}
           >
             <motion.div
               animate={{ opacity: 1, x: 0 }}
-              className="hidden lg:block lg:w-1/2 bg-cover bg-center "
+              {...{ className: "hidden lg:block lg:w-1/2 bg-cover bg-center " }}
               exit={{ x: 0, width: "100%" }}
               initial={{ opacity: 0, x: 0 }}
               style={{
@@ -134,7 +131,7 @@ export default function Login() {
             />
             <motion.div
               animate={{ opacity: 1, x: 0 }}
-              className="w-full lg:w-1/2 p-8"
+              {...{ className: "w-full lg:w-1/2 p-8" }}
               exit={{ x: -50, opacity: 0 }}
               initial={{ opacity: 0, x: 50 }}
               transition={{ duration: 1 }}
