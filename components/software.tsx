@@ -57,6 +57,7 @@ export default function Software(props: SoftwareProps) {
       />
       <CardFooter className="absolute bg-white/30 bottom-0 border-t border-zinc-100/50 z-10 justify-between gap-2">
         <Select
+          aria-label="Select"
           className="max-w-xs"
           labelPlacement="outside"
           placeholder="Elegir"

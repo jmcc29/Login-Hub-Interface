@@ -9,7 +9,7 @@ export async function POST() {
 
     return new NextResponse("cerrado de sesión exitoso", { status: 200 });
   } catch (e: any) {
-    console.error("Ocurrio un error en salir sesión");
+    console.error(e, "Ocurrió un error en salir sesión");
 
     return new NextResponse("Error al cerrar sesión", { status: 500 });
   }
