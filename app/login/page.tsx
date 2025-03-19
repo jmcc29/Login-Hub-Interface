@@ -92,6 +92,7 @@ export default function Login() {
         Alert({ message: `${data.message}`, variant: "error" });
       }
     } catch (error) {
+      console.error(error);
       setIsAnimating(false);
     } finally {
       setIsLoading(false);
