@@ -1,11 +1,12 @@
 "use client";
-import { Avatar } from "@heroui/avatar";
+import { AvatarIcon } from "@heroui/avatar";
 import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
 } from "@heroui/dropdown";
+import { User } from "@heroui/user";
 
 import { apiServerFrontend } from "@/services";
 
@@ -21,16 +22,24 @@ export default function UserComponent() {
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
-        <Avatar
-          isBordered
+        <User
           as="button"
+          avatarProps={{
+            isBordered: true,
+            icon: <AvatarIcon />,
+          }}
           className="transition-transform"
-          src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+          description=""
+          name=""
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
-        <DropdownItem key="logout" color="danger" onClick={handleLogout}>
-          Salir sesión
+        <DropdownItem key="profile" className="h-14 gap-2">
+          <p className="font-bold">Sesión activa{/*como */}</p>
+          {/* <p>@Nombre Usuario</p> */}
+        </DropdownItem>
+        <DropdownItem key="logout" color="danger" onPress={handleLogout}>
+          Cerrar Sesión
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

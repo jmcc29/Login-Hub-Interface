@@ -72,7 +72,7 @@ export const middleware = async (req: NextRequest) => {
       }
     }
   } catch (e) {
-    console.log("Error verificando token en middleware");
+    console.log(e, "Error verificando token en middleware");
     const url = req.nextUrl.clone();
 
     url.pathname = "/login";

@@ -1,19 +1,40 @@
 "use client";
+import { useState } from "react";
 import { Button } from "@heroui/button";
 import { Card, CardFooter, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
+import { Select, SelectItem } from "@heroui/select";
+import { Link } from "@heroui/link";
 
 interface SoftwareProps {
   name: string;
   subtitle: string;
-  url: string;
-  image?: string;
+  url_prod: string;
+  url_dev: string;
+  url_manual: string;
+  image: string;
 }
 
 export default function Software(props: SoftwareProps) {
-  const { name, subtitle, url, image } = props;
+  const { name, subtitle, url_prod, url_dev, url_manual, image } = props;
+  const [selectedKey, setSelectedKey] = useState<string>("dev");
 
-  const handleExternalRedirect = (url: string) => {
+  const handleExternalRedirect = () => {
+    let url = "";
+
+    switch (selectedKey) {
+      case "prod":
+        url = url_prod;
+        break;
+      case "dev":
+        url = url_dev;
+        break;
+      case "manual":
+        url = url_manual;
+        break;
+      default:
+        return;
+    }
     window.location.href = url;
   };
 
@@ -23,7 +44,7 @@ export default function Software(props: SoftwareProps) {
       className="w-full h-[300px] col-span-12 sm:col-span-2"
     >
       <CardHeader className="absolute z-10 top-1 flex-col items-start">
-        <p className="text-tiny text-white/60 uppercase font-bold">
+        <p className="text-tiny text-black/60 uppercase font-bold">
           {subtitle}
         </p>
         <h4 className="text-black font-medium text-2xl">{name}</h4>
@@ -32,24 +53,31 @@ export default function Software(props: SoftwareProps) {
         removeWrapper
         alt="Card example background"
         className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-        src={image ?? "https://nextui.org/images/card-example-6.jpeg"}
+        src={image}
       />
-      <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
-        <Button
-          className="text-tiny bg-lime-700 text-white font-bold"
-          radius="sm"
-          size="sm"
-          onClick={() => handleExternalRedirect(url)}
+      <CardFooter className="absolute bg-white/30 bottom-0 border-t border-zinc-100/50 z-10 justify-between gap-2">
+        <Select
+          aria-label="Select"
+          className="max-w-xs"
+          labelPlacement="outside"
+          placeholder="Elegir"
+          selectedKeys={[selectedKey]}
+          onSelectionChange={(keys) =>
+            setSelectedKey(Array.from(keys)[0] as string)
+          }
         >
-          Producción
-        </Button>
+          {/* <SelectItem key="prod">Producción</SelectItem> */}
+          <SelectItem key="dev">Desarrollo</SelectItem>
+          {/* <SelectItem key="manual">Manual</SelectItem> */}
+        </Select>
         <Button
-          className="text-tiny bg-gray-700 text-white font-bold"
-          radius="sm"
-          size="sm"
-        >
-          Versión de Pruebas
-        </Button>
+          showAnchorIcon
+          aria-label="Link"
+          as={Link}
+          className="bg-white/90 min-w-10 text-lg"
+          size="md"
+          onPress={handleExternalRedirect}
+        />
       </CardFooter>
     </Card>
   );
