@@ -6,7 +6,6 @@ export abstract class APIConnection {
   }
 
   protected buildUrl(endpoint: string): string {
-    // console.log(`${this.baseUrl.replace(/\/+$/, '')}/${endpoint.replace(/^\/+/, '')}`)
     return `${this.baseUrl.replace(/\/+$/, "")}/${endpoint.replace(/^\/+/, "")}`;
   }
 
