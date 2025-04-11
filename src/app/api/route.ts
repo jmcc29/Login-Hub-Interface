@@ -1,20 +1,18 @@
 import { NextResponse } from "next/server";
 import { apiClient } from "@/services";
 
-export async function loginAction(
-  username: string,
-  password: string,
-): Promise<NextResponse> {
+export async function POST(request: Request) {
+  const { username, password } = await request.json();
+
   try {
     const response = await apiClient.POST("auth/login", {
       username,
       password,
     });
-    const statusCode = response.status;
 
     const responseData = await response.json();
-    if (statusCode >= 400) {
-      console.log("Response data: ", responseData);
+
+    if (!response.ok) {
 
       return NextResponse.json(
         {
@@ -22,17 +20,22 @@ export async function loginAction(
           message: responseData.message,
           user: responseData.user,
         },
-        { status: statusCode },
+        { status: response.status },
       );
     }
 
-    return NextResponse.json(
+    const nextResponse = NextResponse.json(
       {
         error: false,
         message: "Login successful",
       },
       { status: 200 },
     );
+
+    nextResponse.headers.set("Set-Cookie", response.headers.get("Set-Cookie") || "");
+
+    return nextResponse;
+
   } catch (error: any) {
     console.error(error);
 
