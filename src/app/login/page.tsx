@@ -7,10 +7,9 @@ import { Input } from "@heroui/input";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-import { loginAction } from "@/api";
 import { MuserpolLogo } from "@/components/icons";
 import { useAlert } from "@/hooks/useAlerts";
+import { apiServerFrontend } from "@/services";
 
 interface FormData {
   user: string;
@@ -73,11 +72,16 @@ export default function Login() {
 
       setIsLoading(true);
 
-      const response = await loginAction(formData.user, formData.password);
+      const response = await apiServerFrontend.POST("/login", {
+        username: formData.user,
+        password: formData.password,
+      });
+
       const data = await response.json();
 
       if (!data.error) {
         setIsAnimating(true);
+        setIsLoading(true);
         router.push("/apphub");
       } else {
         Alert({ message: `${data.message}`, variant: "error" });
