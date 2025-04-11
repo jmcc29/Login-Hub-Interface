@@ -72,7 +72,7 @@ export default function Login() {
 
       setIsLoading(true);
 
-      const response = await apiServerFrontend.POST("/login", {
+      const response = await apiServerFrontend.POST("/api", {
         username: formData.user,
         password: formData.password,
       });
