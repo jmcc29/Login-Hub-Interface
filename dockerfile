@@ -1,9 +1,9 @@
 FROM node:22.14-alpine3.20
 
-WORKDIR /usr/app
+WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json pnpm-lock.yaml ./
 
-RUN yarn install --frozen-lockfile --network-timeout 600000
+RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
 COPY . .

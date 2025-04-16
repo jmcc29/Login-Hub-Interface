@@ -1,5 +1,5 @@
-import Software from "@/components/software";
 import { computerTools } from "@/config/site";
+import Software from "@/components/software";
 
 export default function AppHub() {
   return (

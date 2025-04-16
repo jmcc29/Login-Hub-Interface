@@ -7,16 +7,17 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown";
 import { User } from "@heroui/user";
+import { useRouter } from "next/navigation";
 
-import { apiServerFrontend } from "@/services";
+import { logout } from "@/api";
 
 export default function UserComponent() {
-  const handleLogout = async () => {
-    const response = await apiServerFrontend.POST("/api/logout", {});
+  const router = useRouter();
 
-    if (response.ok) {
-      window.location.reload();
-    }
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
   };
 
   return (

@@ -7,10 +7,9 @@ import { Input } from "@heroui/input";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-import { apiServerFrontend } from "@/services";
-import { useAlert } from "@/hooks/useAlerts";
 import { MuserpolLogo } from "@/components/icons";
+import { useAlert } from "@/hooks/useAlerts";
+import { apiServerFrontend } from "@/services";
 
 interface FormData {
   user: string;
@@ -35,10 +34,6 @@ export default function Login() {
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const { Alert } = useAlert();
-
-  const handleRedirect = () => {
-    router.push("/apphub");
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -74,26 +69,26 @@ export default function Login() {
     try {
       e.preventDefault();
       if (!validateForm()) return;
-      const response = await apiServerFrontend.POST("/api/login/", {
+
+      setIsLoading(true);
+
+      const response = await apiServerFrontend.POST("/api", {
         username: formData.user,
         password: formData.password,
       });
+
       const data = await response.json();
 
       if (!data.error) {
-        setTimeout(() => {
-          handleRedirect();
-        }, 1000);
         setIsAnimating(true);
         setIsLoading(true);
+        router.push("/apphub");
       } else {
-        setIsAnimating(false);
-        setIsLoading(false);
         Alert({ message: `${data.message}`, variant: "error" });
       }
     } catch (error) {
       console.error(error);
-      setIsAnimating(false);
+      Alert({ message: "Hubo un error en el servicio", variant: "error" });
     } finally {
       setIsLoading(false);
     }
@@ -103,36 +98,28 @@ export default function Login() {
     <AnimatePresence>
       {!isAnimating && (
         <motion.div
-          {...{
-            className:
-              "flex items-center border-20 justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200",
-          }}
+          className="flex items-center border-20 justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200"
           exit={{ opacity: 0 }}
           initial={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
           <motion.div
-            {...{
-              className:
-                "flex w-full max-w-4xl bg-white rounded-lg shadow-2xl overflow-hidden",
-            }}
+            className="flex w-full max-w-4xl bg-white rounded-lg shadow-2xl overflow-hidden"
             exit={{ opacity: 0 }}
             initial={{ opacity: 1 }}
             transition={{ duration: 1 }}
           >
             <motion.div
               animate={{ opacity: 1, x: 0 }}
-              {...{ className: "hidden lg:block lg:w-1/2 bg-cover bg-center " }}
+              className="hidden lg:block lg:w-1/2 bg-cover bg-center"
               exit={{ x: 0, width: "100%" }}
               initial={{ opacity: 0, x: 0 }}
-              style={{
-                backgroundImage: "url('muserpol.jpg')",
-              }}
+              style={{ backgroundImage: "url('muserpol.jpg')" }}
               transition={{ duration: 1 }}
             />
             <motion.div
               animate={{ opacity: 1, x: 0 }}
-              {...{ className: "w-full lg:w-1/2 p-8" }}
+              className="w-full lg:w-1/2 p-8"
               exit={{ x: -50, opacity: 0 }}
               initial={{ opacity: 0, x: 50 }}
               transition={{ duration: 1 }}
@@ -206,7 +193,6 @@ export default function Login() {
                           }
                           errorMessage="Por favor ingrese su contraseña"
                           id="password"
-                          isInvalid={false}
                           label="Contraseña"
                           labelPlacement="outside"
                           name="password"

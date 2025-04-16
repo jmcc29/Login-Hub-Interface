@@ -16,9 +16,9 @@ export class FetchServiceFactory extends APIConnectionFactory {
 }
 
 const host = process.env.NEXT_PUBLIC_BACKEND_HOST || "localhost";
-const port = process.env.NEXT_PUBLIC_BACKEND_PORT || 3080;
+const port = process.env.NEXT_PUBLIC_BACKEND_PORT || 3000;
 
-const baseUrl = `http://${host}:${port}/`;
+const baseUrl = `http://${host}:${port}/api/`;
 
 const factory = new FetchServiceFactory(baseUrl);
 
