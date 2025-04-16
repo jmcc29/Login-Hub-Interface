@@ -18,7 +18,10 @@ export const Navbar = () => {
             className="flex justify-start items-center gap-1"
             href="/apphub"
           >
-            <Logo />
+            <Logo 
+              height={30}
+              width={80}
+            />
           </NextLink>
         </NavbarBrand>
       </NavbarContent>

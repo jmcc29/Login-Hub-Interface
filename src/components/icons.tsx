@@ -9,21 +9,33 @@ export const MuserpolLogo = () => (
 );
 
 export const Logo: React.FC<IconSvgProps> = ({
-  size = 320,
+  size,
   width,
   height,
   ...props
-}) => (
-  <svg
-    fill="none"
-    height={size || height}
-    viewBox="0 0 600 115"
-    width={size || width}
-    {...props}
-  >
-    <image height="80" href="muserpol-logo.png" width="200" x="10" y="10" />
-  </svg>
-);
+}) => {
+  const finalSize = size ?? width ?? height;
+  const finalWidth = width ?? finalSize;
+  const finalHeight = height ?? finalSize;
+
+  return (
+    <svg
+      fill="none"
+      height={finalHeight}
+      viewBox={`0 0 ${finalWidth} ${finalHeight}`}
+      width={finalWidth}
+      {...props}
+    >
+      <image
+        height={finalHeight}
+        href="muserpol-logo.png"
+        width={finalWidth}
+        x="0"
+        y="0"
+      />
+    </svg>
+  );
+};
 
 export const MoonFilledIcon = ({
   size = 24,
