@@ -14,7 +14,6 @@ import { logout } from "@/api";
 export default function UserComponent() {
   const router = useRouter();
 
-
   const handleLogout = async () => {
     await logout();
     router.push("/");
