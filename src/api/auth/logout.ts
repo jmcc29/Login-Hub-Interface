@@ -9,11 +9,14 @@ export async function logout() {
     await apiClient.GET("auth/logout");
 
     const cookieStore = await cookies();
-    cookieStore.delete("msp");
 
+    cookieStore.delete("msp");
   } catch (error: any) {
     console.error(error);
 
-    return NextResponse.json({ error: true, message: "Hubo un error en el servicio" }, { status: 500 });
+    return NextResponse.json(
+      { error: true, message: "Hubo un error en el servicio" },
+      { status: 500 }
+    );
   }
 }
