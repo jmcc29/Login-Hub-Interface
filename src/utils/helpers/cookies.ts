@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-import { Module } from "./interfaces";
+import { Module } from "@/utils/interfaces/index";
 
 export async function getModules() {
   const cookieStore = await cookies();
