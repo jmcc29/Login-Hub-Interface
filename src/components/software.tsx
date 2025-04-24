@@ -9,14 +9,14 @@ import { Link } from "@heroui/link";
 interface SoftwareProps {
   name: string;
   subtitle: string;
-  url_prod: string;
-  url_dev: string;
-  url_manual: string;
+  urlProd: string;
+  urlDev: string;
+  urlManual: string;
   image: string;
 }
 
 export default function Software(props: SoftwareProps) {
-  const { name, subtitle, url_prod, url_dev, url_manual, image } = props;
+  const { name, subtitle, urlProd, urlDev, urlManual, image } = props;
   const [selectedKey, setSelectedKey] = useState<string>("dev");
 
   const handleExternalRedirect = () => {
@@ -24,13 +24,13 @@ export default function Software(props: SoftwareProps) {
 
     switch (selectedKey) {
       case "prod":
-        url = url_prod;
+        url = urlProd;
         break;
       case "dev":
-        url = url_dev;
+        url = urlDev;
         break;
       case "manual":
-        url = url_manual;
+        url = urlManual;
         break;
       default:
         return;
