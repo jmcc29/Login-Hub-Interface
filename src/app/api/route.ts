@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { apiClient } from "@/services";
 
 export async function POST(request: Request) {
@@ -13,7 +14,6 @@ export async function POST(request: Request) {
     const responseData = await response.json();
 
     if (!response.ok) {
-
       return NextResponse.json(
         {
           error: true,
@@ -32,10 +32,12 @@ export async function POST(request: Request) {
       { status: 200 },
     );
 
-    nextResponse.headers.set("Set-Cookie", response.headers.get("Set-Cookie") || "");
+    nextResponse.headers.set(
+      "Set-Cookie",
+      response.headers.get("Set-Cookie") || "",
+    );
 
     return nextResponse;
-
   } catch (error: any) {
     console.error(error);
 

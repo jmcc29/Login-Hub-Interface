@@ -53,7 +53,7 @@ export default function Software(props: SoftwareProps) {
         removeWrapper
         alt="Card example background"
         className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-        src={image}
+        src={"/" + image}
       />
       <CardFooter className="absolute bg-white/30 bottom-0 border-t border-zinc-100/50 z-10 justify-between gap-2">
         <Select

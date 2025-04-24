@@ -28,7 +28,7 @@ export const Logo: React.FC<IconSvgProps> = ({
     >
       <image
         height={finalHeight}
-        href="muserpol-logo.png"
+        href="/muserpol-logo.png"
         width={finalWidth}
         x="0"
         y="0"
