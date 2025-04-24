@@ -19,9 +19,9 @@ export default async function AppHub() {
             image={"mod" + index + ".jpg"}
             name={modules.name}
             subtitle={"Herramienta Informática"}
-            url_dev={modules.url_dev}
-            url_manual={modules.url_manual}
-            url_prod={modules.url_prod}
+            urlDev={modules.urlDev}
+            urlManual={modules.urlManual}
+            urlProd={modules.urlProd}
           />
         ))}
       </div>
