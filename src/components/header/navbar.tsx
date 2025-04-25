@@ -13,7 +13,7 @@ import { Suspense } from "react";
 import { ThemeSwitch } from "../common/theme-switch";
 
 export const Navbar = async () => {
-  const data= await getUserCookie();
+  const {data}= await getUserCookie();
   return (
     <Suspense
       fallback={
