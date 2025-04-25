@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MuserpolLogo } from "@/components/common/icons";
 import { useAlert } from "@/hooks/useAlerts";
-import { apiServerFrontend } from "@/services";
+import { apiServerFrontend } from "@/utils/services";
 
 interface FormData {
   user: string;
