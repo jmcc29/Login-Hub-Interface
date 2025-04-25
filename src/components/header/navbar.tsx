@@ -6,8 +6,8 @@ import {
 } from "@heroui/navbar";
 import NextLink from "next/link";
 
-import { Logo } from "@/components/icons";
-import UserComponent from "@/components/user";
+import { Logo } from "@/components/common/icons";
+import UserComponent from "@/components/header/user";
 
 export const Navbar = () => {
   return (
