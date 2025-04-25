@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "@/utils/styles/globals.css";
 import { Viewport } from "next";
 import clsx from "clsx";
 
