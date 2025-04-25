@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MuserpolLogo } from "@/components/common/icons";
-import { useAlert } from "@/hooks/useAlerts";
+import { useAlert } from "@/utils/hooks/useAlerts";
 import { apiServerFrontend } from "@/utils/services";
 
 interface FormData {
