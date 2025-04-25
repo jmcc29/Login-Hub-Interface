@@ -15,10 +15,28 @@ function parseCookie(raw: string) {
     return null;
   }
 }
-export async function getUserCookie() {
-  const raw = await getCookie("user");
-  if (!raw) return [];
-  return parseCookie(raw);
+
+export async function getUserCookie(): Promise<ResponseData> {
+  try {
+    const raw = await getCookie("user");
+
+    if (!raw) {
+      return {
+        error: true,
+        message: "No se encontró la cookie 'user'",
+      };
+    }
+    return {
+      error: false,
+      message: "Cookie 'user' obtenida exitosamente",
+      data: JSON.parse(raw),
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message: "Error al parsear la cookie 'user': " + error,
+    };
+  }
 }
 
 export async function getModulesCookie() {
@@ -30,8 +48,8 @@ export async function getModulesCookie() {
     const modules: Module[] = JSON.parse(raw);
 
     return modules;
-  } catch (err) {
-    console.error("Error al parsear la cookie 'modules':", err);
+  } catch (error) {
+    console.error("Error al parsear la cookie 'modules':", error);
 
     return [];
   }
