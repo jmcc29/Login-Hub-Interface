@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import Software from "@/components/software";
-import { getModules } from "@/helpers/cookies";
+import Software from "@/components/apphub/software";
+import { getModulesCookie } from "@/utils/helpers/cookies";
 export default async function AppHub() {
-  const modules = await getModules();
+  const modules = await getModulesCookie();
 
   return (
     <Suspense

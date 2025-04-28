@@ -7,9 +7,9 @@ import { Input } from "@heroui/input";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MuserpolLogo } from "@/components/icons";
-import { useAlert } from "@/hooks/useAlerts";
-import { apiServerFrontend } from "@/services";
+import { MuserpolLogo } from "@/components/common/icons";
+import { useAlert } from "@/utils/hooks/useAlerts";
+import { apiServerFrontend } from "@/utils/services";
 
 interface FormData {
   user: string;

@@ -1,4 +1,4 @@
-import AlertProvider from "@/context/AlertProvider";
+import AlertProvider from "@/utils/context/AlertProvider";
 
 export default function LoginLayout({
   children,

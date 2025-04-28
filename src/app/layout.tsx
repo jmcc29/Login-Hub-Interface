@@ -1,10 +1,10 @@
-import "@/styles/globals.css";
+import "@/utils/styles/globals.css";
 import { Viewport } from "next";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
 
-import { fontSans } from "@/config/fonts";
+import { fontSans } from "@/utils/fonts";
 
 export const viewport: Viewport = {
   themeColor: [

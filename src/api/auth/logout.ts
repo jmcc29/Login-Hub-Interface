@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { apiClient } from "@/services";
+import { apiClient } from "@/utils/services";
 export async function logout() {
   try {
     await apiClient.GET("auth/logout");
