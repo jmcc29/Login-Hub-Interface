@@ -17,7 +17,7 @@ interface SoftwareProps {
 
 export default function Software(props: SoftwareProps) {
   const { name, subtitle, urlProd, urlDev, urlManual, image } = props;
-  const [selectedKey, setSelectedKey] = useState<string>("dev");
+  const [selectedKey, setSelectedKey] = useState<string>("prod");
 
   const handleExternalRedirect = () => {
     let url = "";
@@ -66,7 +66,7 @@ export default function Software(props: SoftwareProps) {
             setSelectedKey(Array.from(keys)[0] as string)
           }
         >
-          {/* <SelectItem key="prod">Producción</SelectItem> */}
+          <SelectItem key="prod">Producción</SelectItem>
           <SelectItem key="dev">Desarrollo</SelectItem>
           {/* <SelectItem key="manual">Manual</SelectItem> */}
         </Select>
