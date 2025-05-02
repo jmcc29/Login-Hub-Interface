@@ -1,10 +1,10 @@
-import "@/styles/globals.css";
+import "@/utils/styles/globals.css";
 import { Viewport } from "next";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
 
-import { fontSans } from "@/config/fonts";
+import { fontSans } from "@/utils/fonts";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -12,7 +12,11 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
 };
-
+export const metadata = {
+  icons: {
+    icon: "/icono_muserpol.svg",
+  },
+}
 export default function RootLayout({
   children,
 }: {

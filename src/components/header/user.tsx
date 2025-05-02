@@ -7,17 +7,19 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown";
 import { User } from "@heroui/user";
-import { useRouter } from "next/navigation";
+
+import { redirect } from "next/navigation";
+import { User as UserInterface } from "@/utils/interfaces/index";
 
 import { logout } from "@/api";
 
-export default function UserComponent() {
-  const router = useRouter();
-
-
+interface Props {
+  user: UserInterface;
+}
+export default function UserComponent({user}: Props) {
   const handleLogout = async () => {
     await logout();
-    router.push("/");
+    redirect("/");
   };
 
   return (
@@ -30,17 +32,17 @@ export default function UserComponent() {
             icon: <AvatarIcon />,
           }}
           className="transition-transform"
-          description=""
-          name=""
+          description={user?.username}
+          name={user?.name}
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
         <DropdownItem key="profile" className="h-14 gap-2">
-          <p className="font-bold">Sesión activa{/*como */}</p>
-          {/* <p>@Nombre Usuario</p> */}
+          <p className="font-bold text-green-700">Sesión activa</p>
+          <p>{user?.name}</p>
         </DropdownItem>
         <DropdownItem key="logout" color="danger" onPress={handleLogout}>
-          Cerrar Sesión
+          <p className="text-red-600">Cerrar Sesión</p>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

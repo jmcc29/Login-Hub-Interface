@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { apiClient } from "@/services";
+
+import { apiClient } from "@/utils/services";
 
 export async function POST(request: Request) {
   const { username, password } = await request.json();
@@ -13,14 +14,13 @@ export async function POST(request: Request) {
     const responseData = await response.json();
 
     if (!response.ok) {
-
       return NextResponse.json(
         {
           error: true,
           message: responseData.message,
           user: responseData.user,
         },
-        { status: response.status },
+        { status: response.status }
       );
     }
 
@@ -29,19 +29,21 @@ export async function POST(request: Request) {
         error: false,
         message: "Login successful",
       },
-      { status: 200 },
+      { status: 200 }
     );
 
-    nextResponse.headers.set("Set-Cookie", response.headers.get("Set-Cookie") || "");
+    nextResponse.headers.set(
+      "Set-Cookie",
+      response.headers.get("Set-Cookie") || ""
+    );
 
     return nextResponse;
-
   } catch (error: any) {
     console.error(error);
 
     return NextResponse.json(
       { error: true, message: "Hubo un error en el servicio" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
