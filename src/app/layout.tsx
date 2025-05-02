@@ -12,7 +12,11 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
 };
-
+export const metadata = {
+  icons: {
+    icon: "/icono_muserpol.svg",
+  },
+}
 export default function RootLayout({
   children,
 }: {
