@@ -2,6 +2,7 @@ export interface Module {
   id: string;
   name: string;
   urlProd: string;
+  urlTest: string;
   urlDev: string;
   urlManual: string;
 }
