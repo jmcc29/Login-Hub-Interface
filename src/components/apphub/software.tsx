@@ -5,32 +5,46 @@ import { Card, CardFooter, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { Select, SelectItem } from "@heroui/select";
 import { Link } from "@heroui/link";
+import { Module } from "@/utils/interfaces";
+import { getDeployEnvironment } from "@/utils/envs";
 
-interface SoftwareProps {
-  name: string;
+type ModulePartial = Partial<Module>;
+interface Props extends ModulePartial {
   subtitle: string;
-  urlProd: string;
-  urlDev: string;
-  urlManual: string;
   image: string;
 }
+const deployEnv = getDeployEnvironment();
 
-export default function Software(props: SoftwareProps) {
-  const { name, subtitle, urlProd, urlDev, urlManual, image } = props;
-  const [selectedKey, setSelectedKey] = useState<string>("prod");
+const selectOptions = {
+  dev: [{ key: "dev", label: "Desarrollo" }],
+  test: [{ key: "test", label: "Pruebas" }],
+  prod: [
+    { key: "prod", label: "Producción" },
+    { key: "test", label: "Pruebas" },
+  ],
+};
 
+const currentOptions =
+  selectOptions[deployEnv as keyof typeof selectOptions] ?? [];
+
+export default function Software(props: Props) {
+  const { name, subtitle, urlProd, urlTest, urlDev, urlManual, image } = props;
+  const [selectedKey, setSelectedKey] = useState<string>(deployEnv);
   const handleExternalRedirect = () => {
     let url = "";
 
     switch (selectedKey) {
       case "prod":
-        url = urlProd;
+        url = urlProd ?? "";
+        break;
+      case "test":
+        url = urlTest ?? "";
         break;
       case "dev":
-        url = urlDev;
+        url = urlDev ?? "";
         break;
       case "manual":
-        url = urlManual;
+        url = urlManual ?? "";
         break;
       default:
         return;
@@ -66,15 +80,18 @@ export default function Software(props: SoftwareProps) {
             setSelectedKey(Array.from(keys)[0] as string)
           }
         >
-          <SelectItem key="prod">Producción</SelectItem>
-          <SelectItem key="dev">Desarrollo</SelectItem>
-          {/* <SelectItem key="manual">Manual</SelectItem> */}
+          <>
+            {currentOptions.map(({ key, label }) => (
+              <SelectItem key={key}>{label}</SelectItem>
+            ))}
+            <SelectItem key="manual">Manual</SelectItem>
+          </>
         </Select>
         <Button
           showAnchorIcon
           aria-label="Link"
           as={Link}
-          className="bg-white/90 min-w-10 text-lg"
+          className="min-w-10 text-lg"
           size="md"
           onPress={handleExternalRedirect}
         />
