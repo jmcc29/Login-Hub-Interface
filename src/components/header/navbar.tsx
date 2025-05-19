@@ -27,7 +27,7 @@ export const Navbar = async () => {
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink
               className="flex justify-start items-center gap-1"
-              href="/apphub"
+              href="/modules"
             >
               <Logo height={30} width={80} />
             </NextLink>

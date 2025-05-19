@@ -82,7 +82,7 @@ export default function Login() {
       if (!data.error) {
         setIsAnimating(true);
         setIsLoading(true);
-        router.push("/apphub");
+        router.push("/modules");
       } else {
         Alert({ message: `${data.message}`, variant: "error" });
       }
