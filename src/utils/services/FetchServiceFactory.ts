@@ -27,7 +27,7 @@ export const apiClient = factory.createAPIConnection();
 const hostFrontend = process.env.NEXT_PUBLIC_SERVER_FRONTEND || "localhost";
 const portFrontend = process.env.NEXT_PUBLIC_SERVER_PORT_FRONTEND || 3000;
 
-const baseURLFrontend = `http://${hostFrontend}:${portFrontend}/`;
+export const baseURLFrontend = `http://${hostFrontend}:${portFrontend}/`;
 
 const factoryFrontend = new FetchServiceFactory(baseURLFrontend);
 
