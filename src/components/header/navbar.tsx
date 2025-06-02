@@ -5,15 +5,17 @@ import {
   Navbar as NextUINavbar,
 } from "@heroui/navbar";
 import NextLink from "next/link";
+import { Suspense } from "react";
+
+import { ThemeSwitch } from "../common/theme-switch";
 
 import { Logo } from "@/components/common/icons";
 import UserComponent from "@/components/header/user";
 import { getUserCookie } from "@/utils/helpers/cookies";
-import { Suspense } from "react";
-import { ThemeSwitch } from "../common/theme-switch";
 
 export const Navbar = async () => {
-  const {data}= await getUserCookie();
+  const { data } = await getUserCookie();
+
   return (
     <Suspense
       fallback={
@@ -39,7 +41,7 @@ export const Navbar = async () => {
           justify="end"
         >
           <NavbarItem className="hidden sm:flex gap-2">
-           <ThemeSwitch />
+            <ThemeSwitch />
           </NavbarItem>
           <UserComponent user={data} />
         </NavbarContent>
