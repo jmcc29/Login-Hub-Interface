@@ -5,18 +5,19 @@ import { Card, CardFooter, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { Select, SelectItem } from "@heroui/select";
 import { Link } from "@heroui/link";
-import { Module } from "@/utils/interfaces";
+import { useRouter } from "next/navigation";
+
+import { Software as SoftwareProps } from "@/utils/interfaces";
 import { getDeployEnvironment } from "@/utils/envs";
 
-type ModulePartial = Partial<Module>;
-interface Props extends ModulePartial {
-  subtitle: string;
-  image: string;
-}
 const deployEnv = getDeployEnvironment();
 
 const selectOptions = {
   dev: [{ key: "dev", label: "Desarrollo" }],
+  local: [
+    { key: "local", label: "Local" },
+    { key: "dev", label: "Desarrollo" },
+  ],
   test: [{ key: "test", label: "Pruebas" }],
   prod: [
     { key: "prod", label: "Producción" },
@@ -27,29 +28,37 @@ const selectOptions = {
 const currentOptions =
   selectOptions[deployEnv as keyof typeof selectOptions] ?? [];
 
-export default function Software(props: Props) {
-  const { name, subtitle, urlProd, urlTest, urlDev, urlManual, image } = props;
+export default function Software(props: SoftwareProps) {
+  const { id, name, subtitle, urlProd, urlTest, urlDev, urlManual, image } =
+    props;
   const [selectedKey, setSelectedKey] = useState<string>(deployEnv);
-  const handleExternalRedirect = () => {
-    let url = "";
 
-    switch (selectedKey) {
-      case "prod":
-        url = urlProd ?? "";
-        break;
-      case "test":
-        url = urlTest ?? "";
-        break;
-      case "dev":
-        url = urlDev ?? "";
-        break;
-      case "manual":
-        url = urlManual ?? "";
-        break;
-      default:
-        return;
+  const router = useRouter();
+
+  const handleExternalRedirect = () => {
+    if (selectedKey == deployEnv) {
+      router.push(`/modules/${id}`);
+    } else {
+      let url = "";
+
+      switch (selectedKey) {
+        case "prod":
+          url = urlProd ?? "";
+          break;
+        case "test":
+          url = urlTest ?? "";
+          break;
+        case "dev":
+          url = urlDev ?? "";
+          break;
+        case "manual":
+          url = urlManual ?? "";
+          break;
+        default:
+          return;
+      }
+      window.location.href = url;
     }
-    window.location.href = url;
   };
 
   return (
