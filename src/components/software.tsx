@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Button } from "@heroui/button";
 import { Card, CardFooter, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { Select, SelectItem } from "@heroui/select";
 import { Link } from "@heroui/link";
 
 interface SoftwareProps {
@@ -16,27 +15,7 @@ interface SoftwareProps {
 }
 
 export default function Software(props: SoftwareProps) {
-  const { name, subtitle, url_prod, url_dev, url_manual, image } = props;
-  const [selectedKey, setSelectedKey] = useState<string>("prod");
-
-  const handleExternalRedirect = () => {
-    let url = "";
-
-    switch (selectedKey) {
-      case "prod":
-        url = url_prod;
-        break;
-      case "dev":
-        url = url_dev;
-        break;
-      case "manual":
-        url = url_manual;
-        break;
-      default:
-        return;
-    }
-    window.location.href = url;
-  };
+  const { name, subtitle, url_prod, image } = props;
 
   return (
     <Card
@@ -56,28 +35,17 @@ export default function Software(props: SoftwareProps) {
         src={image}
       />
       <CardFooter className="absolute bg-white/30 bottom-0 border-t border-zinc-100/50 z-10 justify-between gap-2">
-        <Select
-          aria-label="Select"
-          className="max-w-xs"
-          labelPlacement="outside"
-          placeholder="Elegir"
-          selectedKeys={[selectedKey]}
-          onSelectionChange={(keys) =>
-            setSelectedKey(Array.from(keys)[0] as string)
-          }
-        >
-          <SelectItem key="prod">Producción</SelectItem>
-          <SelectItem key="dev">Desarrollo</SelectItem>
-          {/* <SelectItem key="manual">Manual</SelectItem> */}
-        </Select>
         <Button
           showAnchorIcon
           aria-label="Link"
           as={Link}
-          className="bg-white/90 min-w-10 text-lg"
+          className="bg-white/90 min-w-10 text-lg w-full"
           size="md"
-          onPress={handleExternalRedirect}
-        />
+          onPress={() => {
+            window.location.href = url_prod;
+          }}
+        >
+        Ingresar </Button>
       </CardFooter>
     </Card>
   );
