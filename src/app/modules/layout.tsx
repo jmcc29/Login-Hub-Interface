@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     icon: "/icono_muserpol.svg",
   },
 };
-export default function ModulesLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
