@@ -7,6 +7,7 @@ import { Input } from "@heroui/input";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 import { MuserpolLogo } from "@/components/common/icons";
 import { useAlert } from "@/utils/hooks/useAlerts";
 import { apiServerFrontend } from "@/utils/services";
@@ -82,7 +83,7 @@ export default function Login() {
       if (!data.error) {
         setIsAnimating(true);
         setIsLoading(true);
-        router.push("/apphub");
+        router.push("/modules");
       } else {
         Alert({ message: `${data.message}`, variant: "error" });
       }

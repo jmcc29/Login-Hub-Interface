@@ -1,7 +1,8 @@
 import { Suspense } from "react";
-import Software from "@/components/apphub/software";
+
+import Software from "@/components/modules/software";
 import { getModulesCookie } from "@/utils/helpers/cookies";
-export default async function AppHub() {
+export default async function Modules() {
   const modules = await getModulesCookie();
 
   return (
@@ -13,15 +14,16 @@ export default async function AppHub() {
       }
     >
       <div className="max-w-full gap-7 grid grid-cols-8 px-10 py-5">
-        {(modules ?? []).map((modules, index) => (
+        {(modules ?? []).map((module, index) => (
           <Software
             key={index}
+            id={module.id}
             image={"mod" + index + ".jpg"}
-            name={modules.name}
+            name={module.name}
             subtitle={"Herramienta Informática"}
-            urlDev={modules.urlDev}
-            urlManual={modules.urlManual}
-            urlProd={modules.urlProd}
+            urlDev={module.urlDev}
+            urlManual={module.urlManual}
+            urlProd={module.urlProd}
           />
         ))}
       </div>

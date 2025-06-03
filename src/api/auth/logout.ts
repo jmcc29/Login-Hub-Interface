@@ -16,7 +16,7 @@ export async function logout() {
 
     return NextResponse.json(
       { error: true, message: "Hubo un error en el servicio" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

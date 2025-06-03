@@ -1,6 +1,6 @@
-import { Navbar } from "@/components/header/navbar";
 import { Metadata } from "next";
 
+import { Navbar } from "@/components/header/navbar";
 
 export const metadata: Metadata = {
   title: {
@@ -12,13 +12,13 @@ export const metadata: Metadata = {
     icon: "/icono_muserpol.svg",
   },
 };
-export default function AppHubLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex flex-col h-screen overflow-y-scroll">
+    <div>
       <Navbar />
       <main className="container">{children}</main>
     </div>

@@ -22,14 +22,14 @@ export const middleware = async (req: NextRequest) => {
 
   try {
     if (path === "/") {
-      return token ? redirectTo(req, "/apphub") : redirectTo(req, "/login");
+      return token ? redirectTo(req, "/modules") : redirectTo(req, "/login");
     }
 
     if (path === "/login") {
-      return token ? redirectTo(req, "/apphub") : response;
+      return token ? redirectTo(req, "/modules") : response;
     }
 
-    const protectedPaths = ["/apphub"];
+    const protectedPaths = ["/modules"];
     const isProtected = protectedPaths.some((p) => path.startsWith(p));
 
     if (isProtected && !token) {

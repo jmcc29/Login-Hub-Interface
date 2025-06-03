@@ -18,6 +18,24 @@ export const metadata = {
     icon: "/icono_muserpol.svg",
   },
 };
+
+const environment = getDeployEnvironment();
+const envConfig: Record<string, { bgColor: string; label: string }> = {
+  dev: {
+    bgColor: "bg-red-600",
+    label: "Versión de desarrollo",
+  },
+  test: {
+    bgColor: "bg-red-500",
+    label: "Versión de pruebas",
+  },
+  local: {
+    bgColor: "bg-blue-500",
+    label: "Versión de desarrollo - local",
+  },
+};
+const currentEnv = envConfig[environment];
+
 export default function RootLayout({
   children,
 }: {
@@ -29,16 +47,18 @@ export default function RootLayout({
       <body
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          fontSans.variable,
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">
             <main className="w-full flex-grow">{children}</main>
-            {getDeployEnvironment() === "dev" && (
-              <footer className="fixed bottom-0 left-0 w-full bg-red-600 text-white text-center py-2 text-sm z-50">
+            {currentEnv && (
+              <footer
+                className={`fixed bottom-0 left-0 w-full ${currentEnv.bgColor} text-white text-center py-2 text-sm z-50`}
+              >
                 <span className="uppercase text-sm font-semibold">
-                  Versión de pruebas
+                  {currentEnv.label}
                 </span>
               </footer>
             )}

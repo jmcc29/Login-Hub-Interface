@@ -7,16 +7,15 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown";
 import { User } from "@heroui/user";
-
 import { redirect } from "next/navigation";
-import { User as UserInterface } from "@/utils/interfaces/index";
 
+import { User as UserInterface } from "@/utils/interfaces/index";
 import { logout } from "@/api";
 
 interface Props {
   user: UserInterface;
 }
-export default function UserComponent({user}: Props) {
+export default function UserComponent({ user }: Props) {
   const handleLogout = async () => {
     await logout();
     redirect("/");
