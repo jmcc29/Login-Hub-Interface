@@ -4,12 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
+import { addToast } from "@heroui/toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MuserpolLogo } from "@/components/icons";
-import { useAlert } from "@/hooks/useAlerts";
-import { apiServerFrontend } from "@/services";
+
+import { apiServerFrontend } from "@/utils/services";
+import { MuserpolLogo } from "@/components/common/icons";
 
 interface FormData {
   user: string;
@@ -17,7 +18,7 @@ interface FormData {
 }
 
 const classNames = {
-  label: "text-black font-bold text-lg/2",
+  label: "text-black font-bold text-md",
   inputWrapper: ["shadow-xl", "backdrop-blur-xl", "backdrop-saturate-200"],
 };
 
@@ -32,8 +33,6 @@ export default function Login() {
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
-
-  const { Alert } = useAlert();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -79,16 +78,32 @@ export default function Login() {
 
       const data = await response.json();
 
+      const userStr = encodeURIComponent(JSON.stringify(data.user));
+
+      document.cookie = `user=${userStr}; path=/; max-age=14400; SameSite=Lax;`;
+
       if (!data.error) {
         setIsAnimating(true);
         setIsLoading(true);
         router.push("/apphub");
       } else {
-        Alert({ message: `${data.message}`, variant: "error" });
+        addToast({
+          title: "Error al iniciar sesión",
+          description: "Revise su usuario y contraseña",
+          color: "danger",
+          timeout: 3000,
+          shouldShowTimeoutProgress: true,
+        });
       }
     } catch (error) {
       console.error(error);
-      Alert({ message: "Hubo un error en el servicio", variant: "error" });
+      addToast({
+        title: "Error",
+        description: "Error al iniciar sesión",
+        color: "warning",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -98,7 +113,7 @@ export default function Login() {
     <AnimatePresence>
       {!isAnimating && (
         <motion.div
-          className="flex items-center border-20 justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200"
+          className="flex items-center justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200"
           exit={{ opacity: 0 }}
           initial={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
@@ -125,7 +140,7 @@ export default function Login() {
               transition={{ duration: 1 }}
             >
               <Card
-                className="w-full py-2 px-8 border-1"
+                className="w-full py-2 px-8 border-1 border-gray-300"
                 radius="none"
                 shadow="none"
               >
@@ -174,7 +189,7 @@ export default function Login() {
                           classNames={classNames}
                           endContent={
                             <button
-                              className="focus:outline-none"
+                              className="focus:outline-hidden"
                               type="button"
                               onClick={togglePasswordVisibility}
                             >
