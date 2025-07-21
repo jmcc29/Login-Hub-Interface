@@ -32,3 +32,5 @@ const baseURLFrontend = `http://${hostFrontend}:${portFrontend}/`;
 const factoryFrontend = new FetchServiceFactory(baseURLFrontend);
 
 export const apiServerFrontend = factoryFrontend.createAPIConnection();
+
+export const urlLogin = baseURLFrontend;
