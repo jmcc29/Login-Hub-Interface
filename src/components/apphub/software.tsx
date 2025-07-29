@@ -4,15 +4,14 @@ import { Card, CardFooter, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { Link } from "@heroui/link";
 
-interface SoftwareProps {
+interface Props {
   name: string;
   subtitle: string;
   url: string;
   image: string;
 }
 
-export default function Software(props: SoftwareProps) {
-  const { name, subtitle, url, image } = props;
+export default function Software({ name, subtitle, url, image }: Props) {
 
   return (
     <Card
