@@ -1,21 +1,17 @@
 "use client";
-import { useState } from "react";
 import { Button } from "@heroui/button";
 import { Card, CardFooter, CardHeader } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { Link } from "@heroui/link";
 
-interface SoftwareProps {
+interface Props {
   name: string;
   subtitle: string;
-  url_prod: string;
-  url_dev: string;
-  url_manual: string;
+  url: string;
   image: string;
 }
 
-export default function Software(props: SoftwareProps) {
-  const { name, subtitle, url_prod, image } = props;
+export default function Software({ name, subtitle, url, image }: Props) {
 
   return (
     <Card
@@ -42,10 +38,11 @@ export default function Software(props: SoftwareProps) {
           className="bg-white/90 min-w-10 text-lg w-full"
           size="md"
           onPress={() => {
-            window.location.href = url_prod;
+            window.location.href = url;
           }}
         >
-        Ingresar </Button>
+          Ingresar{" "}
+        </Button>
       </CardFooter>
     </Card>
   );

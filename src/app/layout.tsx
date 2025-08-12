@@ -1,10 +1,10 @@
-import "@/styles/globals.css";
-import { Viewport } from "next";
+import "@/utils/styles/globals.css";
 import clsx from "clsx";
+import { Viewport } from "next";
 
 import { Providers } from "./providers";
 
-import { fontSans } from "@/config/fonts";
+import { fontSans } from "@/utils/fonts";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -13,7 +13,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
@@ -28,9 +28,7 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <div className="relative flex flex-col h-screen">
-            <main className="w-full flex-grow">{children}</main>
-          </div>
+          <main>{children}</main>
         </Providers>
       </body>
     </html>

@@ -10,10 +10,14 @@ import { User } from "@heroui/user";
 import { useRouter } from "next/navigation";
 
 import { logout } from "@/api";
+import { User as UserInterface } from "@/utils/interfaces";
 
-export default function UserComponent() {
+interface Props {
+  user: UserInterface;
+}
+
+export default function UserComponent({ user }: Props) {
   const router = useRouter();
-
 
   const handleLogout = async () => {
     await logout();
@@ -30,8 +34,8 @@ export default function UserComponent() {
             icon: <AvatarIcon />,
           }}
           className="transition-transform"
-          description=""
-          name=""
+          description={user?.username}
+          name={user?.name}
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
