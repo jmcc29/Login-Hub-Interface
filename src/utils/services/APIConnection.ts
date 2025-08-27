@@ -1,3 +1,4 @@
+// src/utils/services/APIConnection.ts
 export abstract class APIConnection {
   protected baseUrl: string;
 
@@ -9,48 +10,31 @@ export abstract class APIConnection {
     return `${this.baseUrl.replace(/\/+$/, "")}/${endpoint.replace(/^\/+/, "")}`;
   }
 
-  abstract GET(url: string, options?: any): Promise<any>;
-  abstract POST(url: string, body: any, options?: any): Promise<any>;
-  abstract PUT(url: string, body: any, options?: any): Promise<any>;
-  abstract DELETE(url: string, options?: any): Promise<any>;
+  abstract GET(url: string, options?: any): Promise<Response>;
+  abstract POST(url: string, body: any, options?: any): Promise<Response>;
+  abstract PUT(url: string, body: any, options?: any): Promise<Response>;
+  abstract DELETE(url: string, options?: any): Promise<Response>;
 
   protected addInterceptors(requestConfig: RequestInit): RequestInit {
-    const interceptors = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: requestConfig.body,
-    };
+    const headers = new Headers(requestConfig.headers || {});
+    if (!headers.has("Content-Type") && requestConfig.body) {
+      headers.set("Content-Type", "application/json");
+    }
+    headers.set("Accept", "application/json");
 
     return {
       ...requestConfig,
-      headers: {
-        ...requestConfig.headers,
-        ...interceptors.headers,
-      },
-      body: interceptors.body,
+      headers,
+      credentials: "include", // ← importante para enviar cookies al BFF (/api)
+      cache: "no-store",
     };
   }
 
   protected async handleRequest(
     endpoint: string,
     requestConfig: RequestInit,
-  ): Promise<any> {
+  ): Promise<Response> {
     const url = this.buildUrl(endpoint);
-    const response = await fetch(url, requestConfig);
-    const contentType = response.headers.get("content-type") || "";
-
-    if (!response.ok) {
-      if (contentType.includes("application/json")) {
-        return response;
-      }
-      const errorData = await response.json();
-
-      throw new Error(
-        errorData.message || `HTTP error! Status: ${response.status}`,
-      );
-    }
-
-    return response;
+    return fetch(url, requestConfig);
   }
 }

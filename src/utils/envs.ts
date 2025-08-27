@@ -11,3 +11,13 @@ export function getLocalUrl(): string {
 
   return url;
 }
+
+export function getBackendUrl(): string {
+  const url = "http://" + process.env.NEXT_PUBLIC_BACKEND_HOST + ":" + process.env.NEXT_PUBLIC_BACKEND_PORT;
+  return url;
+}
+
+export function getFrontendUrl(): string {
+  const url = "http://" + process.env.NEXT_PUBLIC_SERVER_FRONTEND + ":" + process.env.NEXT_PUBLIC_SERVER_PORT_FRONTEND;
+  return url;
+}
