@@ -1,7 +1,8 @@
 // src/app/api/auth/callback/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getBackendUrl } from "@/utils/envs";
-import { getFrontendUrl } from "@/utils/envs";
+import { apiClient } from "@/utils/services"; 
+
 export async function GET(req: NextRequest) {
   const backendBase = getBackendUrl();
   const url = new URL(req.url);
@@ -30,11 +31,10 @@ export async function GET(req: NextRequest) {
     name: "sid",
     value: sessionId,
     httpOnly: true,
-    sameSite: "strict",   // same-origin: perfecto para BFF
+    sameSite: "lax",   
     secure: false,        // ponlo en true en producción (HTTPS)
     path: "/",
     maxAge: 60 * 60 * 8,  // 8h
   });
-  // Si hubieras usado cookie oauth_state en Next, aquí la limpiarías.
   return resp;
 }
