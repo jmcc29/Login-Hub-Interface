@@ -7,21 +7,19 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown";
 import { User } from "@heroui/user";
-import { useRouter } from "next/navigation";
 
-import { logout } from "@/api";
 import { User as UserInterface } from "@/utils/interfaces";
+import { apiServerFrontend } from "@/utils/services";
 
 interface Props {
   user: UserInterface;
 }
 
 export default function UserComponent({ user }: Props) {
-  const router = useRouter();
 
   const handleLogout = async () => {
-    await logout();
-    router.push("/");
+    await apiServerFrontend.POST("/api/auth/logout",{});
+    window.location.href = "/api/auth/login";
   };
 
   return (

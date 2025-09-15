@@ -4,7 +4,7 @@ export async function GET(req: NextRequest) {
   const frontendOrigin = getFrontendUrl();
   const backendBase = getBackendUrl();
   const url = new URL(req.url);
-  const returnTo = url.searchParams.get("returnTo") ?? "/modules";
+  const returnTo = url.searchParams.get("returnTo") ?? "/apphub";
 
   // El backend construirá la URL de autorización con redirect_uri = <FRONT>/api/auth/callback
   // y preservará returnTo internamente.

@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
   if (!sid) {
     const url = req.nextUrl.clone();
     url.pathname = "/api/auth/login";
-    url.searchParams.set("returnTo", req.nextUrl.pathname || "/modules");
+    url.searchParams.set("returnTo", req.nextUrl.pathname || "/apphub");
     return NextResponse.redirect(url);
   }
   return NextResponse.next();

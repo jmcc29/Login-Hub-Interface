@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
   const { sessionId, returnTo } = await r.json();
 
-  const resp = NextResponse.redirect(returnTo || "/modules", { status: 302 });
+  const resp = NextResponse.redirect(returnTo || "/apphub", { status: 302 });
   resp.cookies.set({
     name: "sid",
     value: sessionId,
