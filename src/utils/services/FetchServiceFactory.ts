@@ -1,6 +1,7 @@
 import { APIConnection } from "./APIConnection";
 import { APIConnectionFactory } from "./APIConnectionFactory";
 import { FetchService } from "./FetchService";
+import { getFrontendUrl, getBackendUrl } from "../env";
 
 export class FetchServiceFactory extends APIConnectionFactory {
   private baseUrl: string;
@@ -15,22 +16,11 @@ export class FetchServiceFactory extends APIConnectionFactory {
   }
 }
 
-const host = process.env.NEXT_PUBLIC_BACKEND_HOST || "localhost";
-const port = process.env.NEXT_PUBLIC_BACKEND_PORT || 3000;
-
-const baseUrl = `http://${host}:${port}/api/`;
-
-const factory = new FetchServiceFactory(baseUrl);
-
+const baseUrlBackend = getBackendUrl()+"/api/";
+const baseUrlFrontend = getFrontendUrl();
+const factory = new FetchServiceFactory(baseUrlBackend);
+const factoryFront = new FetchServiceFactory(baseUrlFrontend);
 export const apiClient = factory.createAPIConnection();
 
-const hostFrontend = process.env.NEXT_PUBLIC_SERVER_FRONTEND || "localhost";
-const portFrontend = process.env.NEXT_PUBLIC_SERVER_PORT_FRONTEND || 3000;
-
-const baseURLFrontend = `http://${hostFrontend}:${portFrontend}/`;
-
-const factoryFrontend = new FetchServiceFactory(baseURLFrontend);
-
-export const apiServerFrontend = factoryFrontend.createAPIConnection();
-
-export const urlLogin = baseURLFrontend;
+export const apiServerFrontend = factoryFront.createAPIConnection();
+export const urlLogin = getFrontendUrl();
