@@ -3,6 +3,10 @@ import { NextResponse, NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const sid = req.cookies.get("sid")?.value;
+  const url = new URL(req.url);
+  if (url.pathname === "/") {
+    return NextResponse.redirect(url.origin + "/apphub");
+  }
   if (!sid) {
     const url = req.nextUrl.clone();
     url.pathname = "/api/auth/login";

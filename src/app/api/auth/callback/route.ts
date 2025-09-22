@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBackendUrl } from "@/utils/env";
-import { apiClient, apiServerFrontend } from "@/utils/services";
+import { apiClient } from "@/utils/services";
 
 export async function GET(req: NextRequest) {
-  const backendBase = getBackendUrl();
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");

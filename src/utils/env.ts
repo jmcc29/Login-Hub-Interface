@@ -15,3 +15,8 @@ export function getFrontendUrl(): string {
   const url = "http://" + process.env.NEXT_PUBLIC_SERVER_FRONTEND + ":" + process.env.NEXT_PUBLIC_SERVER_PORT_FRONTEND;
   return url;
 }
+
+export function getClientId(): string {
+  return process.env.NEXT_PUBLIC_CLIENT_ID || "hub-interface";
+}
+
