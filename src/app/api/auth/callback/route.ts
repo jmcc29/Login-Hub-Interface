@@ -10,8 +10,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Faltan code/state" }, { status: 400 });
   }
 
+  const sid = req.cookies.get("sid")?.value ?? undefined;
+
   const r= await apiClient.POST("auth/exchange", {
-    code, state
+    code, state, sidCookie: sid
   })
   if (!r.ok) {
     const err = await r.text();
