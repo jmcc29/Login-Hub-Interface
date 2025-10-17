@@ -1,23 +1,15 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
-
 import { apiClient } from "@/utils/services";
-export async function logout() {
+
+export async function logout(): Promise<void> {
+
   try {
-    await apiClient.GET("auth/logout");
-
-    const cookieStore = await cookies();
-
-    cookieStore.delete("msp");
-    cookieStore.delete("user");
-  } catch (error: any) {
-    console.error(error);
-
-    return NextResponse.json(
-      { error: true, message: "Hubo un error en el servicio" },
-      { status: 500 },
-    );
+    await apiClient.POST("auth/logout", {});
+  } catch {
+    // opcional: log interno; no rompas el flujo de UI
+  } finally {
+    (await cookies()).delete("sid"); 
   }
 }
