@@ -9,17 +9,16 @@ import {
 import { User } from "@heroui/user";
 
 import { User as UserInterface } from "@/utils/interfaces";
-import { apiServerFrontend } from "@/utils/services";
+import { logout } from "@/api";
 
 interface Props {
   user: UserInterface;
 }
 
 export default function UserComponent({ user }: Props) {
-
   const handleLogout = async () => {
-    await apiServerFrontend.POST("/api/auth/logout",{});
-    window.location.href = "/api/auth/login";
+    await logout();
+    window.location.href = "/";
   };
 
   return (
@@ -38,8 +37,8 @@ export default function UserComponent({ user }: Props) {
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
         <DropdownItem key="profile" className="h-14 gap-2">
-          <p className="font-bold">Sesión activa{/*como */}</p>
-          {/* <p>@Nombre Usuario</p> */}
+          <p className="font-bold text-green-700">Sesión activa</p>
+          <p>{user?.name}</p>
         </DropdownItem>
         <DropdownItem key="logout" color="danger" onPress={handleLogout}>
           Cerrar Sesión
