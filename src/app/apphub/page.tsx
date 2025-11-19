@@ -6,6 +6,8 @@ export default function AppHub() {
       subtitle: "HERRAMIENTA INFORMÁTICA",
       url: `http://${process.env.NEXT_PUBLIC_SERVER_FRONTEND || "localhost"}:3002/persons`,
       image: "beneficiary.jpg",
+      rsname: "beneficiary-interface",
+      scope: "launch",
     },
   ];
 
@@ -18,6 +20,8 @@ export default function AppHub() {
           name={computerTool.name}
           subtitle={computerTool.subtitle}
           url={computerTool.url}
+          rsname={computerTool.rsname}
+          scope={computerTool.scope}
         />
       ))}
     </div>

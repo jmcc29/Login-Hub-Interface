@@ -11,18 +11,9 @@ import { getDeployEnvironment } from "@/utils/env";
 import { Logo } from "@/components/common/icons";
 import UserComponent from "@/components/header/user";
 import { urlLogin } from "@/utils/services";
-import { getUserCookie } from "@/utils/helpers/cookie";
-import { getProfile } from "@/api/auth/profile";
 import { User } from "@/utils/interfaces";
-export const Navbar = async () => {
-  const profile= await getProfile();
+export const Navbar = async ( {user}: {user: User | null}) => {
   const environment = getDeployEnvironment();
-
-  const user: User = {
-    name: profile?.name || "Usuario",
-    username: profile?.username || "username",
-    email: profile?.email || "email",
-  }
   return (
     <Suspense fallback={<div>Cargando...</div>}>
       <NextUINavbar
@@ -64,7 +55,7 @@ export const Navbar = async () => {
           justify="end"
         >
           <NavbarItem className="hidden sm:flex gap-2" />
-          <UserComponent user={user} />
+          {<UserComponent user={user} />}
         </NavbarContent>
       </NextUINavbar>
     </Suspense>

@@ -12,7 +12,7 @@ import { User as UserInterface } from "@/utils/interfaces";
 import { logout } from "@/api";
 
 interface Props {
-  user: UserInterface;
+  user: UserInterface | null;
 }
 
 export default function UserComponent({ user }: Props) {

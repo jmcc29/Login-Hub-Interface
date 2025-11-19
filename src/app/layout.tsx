@@ -5,6 +5,9 @@ import { Viewport } from "next";
 import { Providers } from "./providers";
 
 import { fontSans } from "@/utils/fonts";
+import { getPermissions } from "@/api/auth/permissions";
+import { getClientId } from "@/utils/env";
+import { Permission } from "@/utils/interfaces";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -18,16 +21,28 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
+  const audience = getClientId();
+  let permissions: Permission[] = [];
+  console.log("PERMISSIONS empty:", permissions);
+  try {
+    permissions = await getPermissions(audience);
+    console.log("PERMISSIONS LAYOUT:", permissions);
+  } catch (e) {
+    console.warn("Error fetching permissions");
+  }
   return (
     <html suppressHydrationWarning lang="en">
       <head />
       <body
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+        <Providers
+          themeProps={{ attribute: "class", defaultTheme: "light" }}
+          permissions={permissions}
+        >
           <main>{children}</main>
         </Providers>
       </body>
