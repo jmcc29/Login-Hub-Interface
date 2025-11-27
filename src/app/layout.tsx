@@ -23,7 +23,6 @@ export default async function Layout({
 }) {
   const audience = getClientId();
   let permissions: Permission[] = [];
-  console.log("PERMISSIONS empty:", permissions);
   try {
     permissions = await getPermissions(audience);
     console.log("PERMISSIONS LAYOUT:", permissions);
