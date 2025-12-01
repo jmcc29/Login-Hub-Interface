@@ -7,9 +7,10 @@ export interface ResponseData {
 export interface User {
   name: string;
   username: string;
+  givenName: string;
+  familyName: string;
   email: string;
-  identityCard?: string;
-  position?: string;
+  roles: string [];
 }
 
 export interface Permission {

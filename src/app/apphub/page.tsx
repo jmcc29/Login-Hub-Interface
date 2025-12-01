@@ -9,6 +9,22 @@ export default function AppHub() {
       rsname: "beneficiary-interface",
       scope: "launch",
     },
+    {
+      name: "KIOSCO",
+      subtitle: "HERRAMIENTA INFORMÁTICA",
+      url: `http://${process.env.NEXT_PUBLIC_SERVER_FRONTEND || "localhost"}:3003`,
+      image: "kiosk.jpg",
+      rsname: "kiosk-interface",
+      scope: "launch",
+    },
+    {
+      name: "RECORDS",
+      subtitle: "HERRAMIENTA INFORMÁTICA",
+      url: `http://${process.env.NEXT_PUBLIC_SERVER_FRONTEND || "localhost"}:3004`,
+      image: "records.jpg",
+      rsname: "records-interface",
+      scope: "launch",
+    },    
   ];
 
   return (
