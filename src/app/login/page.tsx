@@ -11,6 +11,7 @@ import { useState } from "react";
 
 import { MuserpolLogo } from "@/components/icons";
 import { apiServerFrontend } from "@/utils/services";
+import { getDeployEnvironment } from "@/utils/env";
 
 interface FormData {
   user: string;
@@ -33,6 +34,7 @@ export default function Login() {
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const accessDev = getDeployEnvironment() != "dev";
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -49,16 +51,24 @@ export default function Login() {
   const validateForm = (): Boolean => {
     const newErrors: Partial<FormData> = {};
 
-    if (!formData.user) {
-      newErrors.user = "El usuario es requerido";
-    } else if (!/^[a-zA-Z]+$/.test(formData.user)) {
-      newErrors.user = "El usuario solo debe contener letras";
+    if (accessDev) {
+      if (!formData.user) {
+        newErrors.user = "El usuario es requerido";
+      }
+
+      if (!/^[a-zA-Z]+$/.test(formData.user)) {
+        newErrors.user = "El usuario solo debe contener letras";
+      }
+
+      if (!formData.password) {
+        newErrors.password = "La contraseña es requerida";
+      }
+
+      if (formData.password.length < 6) {
+        newErrors.password = "La contraseña debe tener 6 caracteres";
+      }
     }
-    if (!formData.password) {
-      newErrors.password = "La contraseña es requerida";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "La contraseña debe tener 6 caracteres";
-    }
+
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
@@ -70,9 +80,10 @@ export default function Login() {
       if (!validateForm()) return;
 
       setIsLoading(true);
+      const username = formData.user || "developmentUser";
 
       const response = await apiServerFrontend.POST("/api", {
-        username: formData.user,
+        username,
         password: formData.password,
       });
 
@@ -150,81 +161,92 @@ export default function Login() {
                     <h1 className="flex flex-row text-2xl font-bold text-center">
                       Iniciar sesión
                     </h1>
+                    {!accessDev && (
+                      <p className="text-sm text-red-400 font-semibold text-center">
+                        Versión de desarrollo
+                      </p>
+                    )}
                   </CardHeader>
                   <CardBody className="space-y-4">
-                    <div className="space-y-2">
-                      <Input
-                        required
-                        aria-describedby={
-                          errors.user ? "user-error" : undefined
-                        }
-                        aria-invalid={!!errors.user}
-                        classNames={classNames}
-                        errorMessage="Por favor ingrese su usuario"
-                        id="user"
-                        label="Usuario"
-                        labelPlacement="outside"
-                        name="user"
-                        placeholder="Ingrese su usuario"
-                        radius="sm"
-                        type="text"
-                        value={formData.user}
-                        variant="flat"
-                        onChange={handleInputChange}
-                      />
-                      {errors.user && (
-                        <p className="text-sm text-red-400" id="user-error">
-                          {errors.user}
-                        </p>
-                      )}
-                    </div>
-                    <div className="space-y-2">
-                      <div className="relative">
-                        <Input
-                          required
-                          aria-describedby={
-                            errors.password ? "password-error" : undefined
-                          }
-                          aria-invalid={!!errors.password}
-                          classNames={classNames}
-                          endContent={
-                            <button
-                              className="focus:outline-hidden"
-                              type="button"
-                              onClick={togglePasswordVisibility}
+                    {accessDev && (
+                      <>
+                        <div className="space-y-2">
+                          <Input
+                            required
+                            aria-describedby={
+                              errors.user ? "user-error" : undefined
+                            }
+                            aria-invalid={!!errors.user}
+                            classNames={classNames}
+                            errorMessage="Por favor ingrese su usuario"
+                            id="user"
+                            label="Usuario"
+                            labelPlacement="outside"
+                            name="user"
+                            placeholder="Ingrese su usuario"
+                            radius="sm"
+                            type="text"
+                            value={formData.user}
+                            variant="flat"
+                            onChange={handleInputChange}
+                          />
+                          {errors.user && (
+                            <p className="text-sm text-red-400" id="user-error">
+                              {errors.user}
+                            </p>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <div className="relative">
+                            <Input
+                              aria-describedby={
+                                errors.password ? "password-error" : undefined
+                              }
+                              aria-invalid={!!errors.password}
+                              classNames={classNames}
+                              endContent={
+                                <button
+                                  className="focus:outline-hidden"
+                                  type="button"
+                                  onClick={togglePasswordVisibility}
+                                >
+                                  {showPassword ? (
+                                    <FontAwesomeIcon
+                                      className="h-5 w-5"
+                                      icon={faEye}
+                                    />
+                                  ) : (
+                                    <FontAwesomeIcon
+                                      className="h-5 w-5"
+                                      icon={faEyeSlash}
+                                    />
+                                  )}
+                                </button>
+                              }
+                              errorMessage="Por favor ingrese su contraseña"
+                              id="password"
+                              label="Contraseña"
+                              labelPlacement="outside"
+                              name="password"
+                              placeholder="Ingrese su contraseña"
+                              radius="sm"
+                              type={showPassword ? "text" : "password"}
+                              value={formData.password}
+                              variant="flat"
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                          {errors.password && (
+                            <p
+                              className="text-sm text-red-400"
+                              id="password-error"
                             >
-                              {showPassword ? (
-                                <FontAwesomeIcon
-                                  className="h-5 w-5"
-                                  icon={faEye}
-                                />
-                              ) : (
-                                <FontAwesomeIcon
-                                  className="h-5 w-5"
-                                  icon={faEyeSlash}
-                                />
-                              )}
-                            </button>
-                          }
-                          errorMessage="Por favor ingrese su contraseña"
-                          id="password"
-                          label="Contraseña"
-                          labelPlacement="outside"
-                          name="password"
-                          placeholder="Ingrese su contraseña"
-                          radius="sm"
-                          type={showPassword ? "text" : "password"}
-                          value={formData.password}
-                          variant="flat"
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      {errors.password && (
-                        <p className="text-sm text-red-400" id="password-error">
-                          {errors.password}
-                        </p>
-                      )}
-                    </div>
+                              {errors.password}
+                            </p>
+                          )}
+                        </div>
+                      </>
+                    )}
                     <div className="shadow-xl">
                       <Button
                         className="space-y-4 w-full bg-lime-700 text-white font-bold"
