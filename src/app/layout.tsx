@@ -39,7 +39,7 @@ export default async function Layout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <main>{children}</main>
+          {children}
         </Providers>
       </body>
     </html>

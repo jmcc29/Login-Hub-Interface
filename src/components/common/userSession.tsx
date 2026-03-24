@@ -12,15 +12,10 @@ import { User } from "@heroui/user";
 interface Props {
   username: string;
   name: string;
-  onLogout: () => void;
-  urlLogin: string;
+  onLogout: () => Promise<void>;
 }
-export const UserSession = ({ username, name, onLogout, urlLogin }: Props) => {
-  const handleOnPress = async () => {
-    await onLogout();
-    window.location.href = urlLogin;
-  };
 
+export const UserSession = ({ username, name, onLogout }: Props) => {
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -40,8 +35,17 @@ export const UserSession = ({ username, name, onLogout, urlLogin }: Props) => {
           <p className="font-bold text-green-700">Sesión activa</p>
           <p>{name}</p>
         </DropdownItem>
-        <DropdownItem key="logout" color="danger" onPress={handleOnPress}>
-          <p className="text-red-600">Cerrar sesión</p>
+
+        <DropdownItem
+          key="logout"
+          color="danger"
+          textValue="Cerrar sesión"
+        >
+          <form action={onLogout}>
+            <button type="submit" className="w-full text-left text-red-600">
+              Cerrar sesión
+            </button>
+          </form>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

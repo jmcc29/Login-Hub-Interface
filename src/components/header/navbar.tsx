@@ -9,9 +9,10 @@ import {
 
 import { UserSession, ThemeSwitch } from "@/components/common";
 import { Logo } from "@/components/icons";
-import { urlLogin } from "@/utils/services";
+import { urlFrontHub } from "@/utils/services";
 import { User } from "@/utils/interfaces";
 import { logout } from "@/api/auth/logout";
+
 interface Props {
   user: User;
   environment: string;
@@ -30,7 +31,7 @@ export const Navbar = ({ user, environment, computerToolName }: Props) => {
         <Tooltip content="Ir inicio" placement="right">
           <Link
             className="flex justify-start items-center gap-1"
-            href={`${urlLogin}/apphub`}
+            href={`${urlFrontHub}/apphub`}
           >
             <Logo height={30} width={80} />
           </Link>
@@ -63,7 +64,6 @@ export const Navbar = ({ user, environment, computerToolName }: Props) => {
         </NavbarItem>
         <UserSession
           name={user?.name}
-          urlLogin={`${urlLogin}/login`}
           username={user?.username}
           onLogout={logout}
         />

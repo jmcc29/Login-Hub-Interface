@@ -1,12 +1,35 @@
 import Software from "@/components/apphub/software";
+import { frontend, externalFrontends} from "@/utils/env";
+
 export default function AppHub() {
   const tools = [
     {
       name: "BENEFICIARIOS",
       subtitle: "HERRAMIENTA INFORMÁTICA",
-      url: `http://${process.env.NEXT_PUBLIC_SERVER_FRONTEND || "localhost"}:3002/persons`,
+      url: `${externalFrontends.beneficiary.url}/persons`,
       image: "beneficiary.jpg",
+      rsname: "beneficiary-interface",
+      scope: "launch",
+      targetClientId: externalFrontends.beneficiary.clientId,
     },
+    // {
+    //   name: "KIOSCO",
+    //   subtitle: "HERRAMIENTA INFORMÁTICA",
+    //   url: `${frontend.url}/kiosk`,
+    //   image: "kiosk.jpg",
+    //   rsname: "kiosk-interface",
+    //   scope: "launch",
+    //   targetClientId: "kiosk-interface",
+    // },
+    // {
+    //   name: "RECORDS",
+    //   subtitle: "HERRAMIENTA INFORMÁTICA",
+    //   url: `${frontend.url}/records`,
+    //   image: "records.jpg",
+    //   rsname: "records-interface",
+    //   scope: "launch",
+    //   targetClientId: "records-interface",
+    // },    
   ];
 
   return (
@@ -18,6 +41,9 @@ export default function AppHub() {
           name={computerTool.name}
           subtitle={computerTool.subtitle}
           url={computerTool.url}
+          rsname={computerTool.rsname}
+          scope={computerTool.scope}
+          targetClientId={computerTool.targetClientId}
         />
       ))}
     </div>
