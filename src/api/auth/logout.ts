@@ -1,23 +1,29 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
-
+import { redirect } from "next/navigation";
 import { apiClient } from "@/utils/services";
-export async function logout() {
-  try {
-    await apiClient.GET("auth/logout");
+import { login } from "./login";
 
+export async function logout(): Promise<never> {
+  try {
+    await apiClient.DELETE("auth/logout", {});
+  } catch {
+    // opcional
+  } finally {
     const cookieStore = await cookies();
 
-    cookieStore.delete("msp");
-    cookieStore.delete("user");
-  } catch (error: any) {
-    console.error(error);
+    cookieStore.set("sid", "", {
+      path: "/",
+      maxAge: 0,
+    });
 
-    return NextResponse.json(
-      { error: true, message: "Hubo un error en el servicio" },
-      { status: 500 },
-    );
+    cookieStore.set("profile", "", {
+      path: "/",
+      maxAge: 0,
+    });
   }
+
+  const loginUrl = await login("/apphub");
+  redirect(loginUrl);
 }

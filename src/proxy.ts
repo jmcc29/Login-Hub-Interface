@@ -1,45 +1,34 @@
-import { NextResponse, NextRequest } from "next/server";
-import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { login } from "./api/auth/login";
+import { tokenStatus } from "./api/auth/token";
+import { frontend } from "./utils/env";
 
-const redirectTo = (req: NextRequest, pathname: string) => {
-  const url = req.nextUrl.clone();
-
-  url.pathname = pathname;
-
-  return NextResponse.redirect(url);
-};
-
-export const proxy = async (req: NextRequest) => {
-  const response = NextResponse.next();
-
-  if (req.method === "OPTIONS") {
-    return response;
+export async function proxy(req: NextRequest) {
+  const sid = req.cookies.get("sid")?.value;
+  const clientId = frontend.clientId;
+  if (req.nextUrl.pathname === "/") {
+    const u = req.nextUrl.clone();
+    u.pathname = "/apphub";
+    return NextResponse.redirect(u);
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("msp")?.value;
-  const path = req.nextUrl.pathname;
+  if (!sid) {
+    const urlLogin = await login(req.nextUrl.pathname + req.nextUrl.search);
+    return NextResponse.redirect(urlLogin);
+  }
 
   try {
-    if (path === "/") {
-      return token ? redirectTo(req, "/apphub") : redirectTo(req, "/login");
-    }
-
-    if (path === "/login") {
-      return token ? redirectTo(req, "/apphub") : response;
-    }
-
-    const protectedPaths = ["/apphub"];
-    const isProtected = protectedPaths.some((p) => path.startsWith(p));
-
-    if (isProtected && !token) {
-      return redirectTo(req, "/login");
-    }
-
-    return response;
+    const { exists, valid } = await tokenStatus(clientId);
+    console.log(`token/verify responde: exists=${exists} valid=${valid}`);
+    if (exists && valid) return NextResponse.next();
   } catch (e) {
-    console.error("Error verificando token en middleware:", e);
-
-    return redirectTo(req, "/login");
+    console.warn(e);
   }
+
+  const urlLogin = await login(req.nextUrl.pathname + req.nextUrl.search);
+  return NextResponse.redirect(urlLogin);
+}
+
+export const config = {
+  matcher: ["/((?!api/auth/|_next/|favicon.ico).*)"],
 };

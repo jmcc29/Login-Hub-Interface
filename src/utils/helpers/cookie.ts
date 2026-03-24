@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-import { ResponseData } from "@/utils/interfaces";
+import { ResponseData, User } from "@/utils/interfaces";
 
 export async function getCookie(nameCookie: string): Promise<any> {
   const cookieStore = await cookies();
@@ -15,26 +15,26 @@ export async function getCookie(nameCookie: string): Promise<any> {
   return cookie.value;
 }
 
-export async function getUserCookie(): Promise<ResponseData> {
+export async function getProfileCookie(): Promise<ResponseData> {
   try {
-    const cookie = await getCookie("user");
+    const cookie = await getCookie("profile");
 
     if (!cookie) {
       return {
         error: true,
-        message: "No se encontró la cookie 'user'",
+        message: "No se encontró la cookie 'profile'",
       };
     }
-
+    console.log("Cookie 'profile' encontrada:", cookie); // Debug: Verificar el valor de la cookie en la consola
     return {
       error: false,
-      message: "Cookie 'user' obtenida exitosamente",
+      message: "Cookie 'profile' obtenida exitosamente",
       data: JSON.parse(cookie),
     };
   } catch (error) {
     return {
       error: true,
-      message: "Error al obtener la cookie 'user': " + error,
+      message: "Error al obtener la cookie 'profile': " + error,
     };
   }
 }
