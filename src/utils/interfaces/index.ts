@@ -5,9 +5,16 @@ export interface ResponseData {
 }
 
 export interface User {
-  id: string;
   name: string;
   username: string;
-  identityCard?: string;
-  position?: string;
+  givenName: string;
+  familyName: string;
+  email: string;
+  roles: string[];
+}
+
+export interface Permission {
+  scopes: string[];
+  rsid: string;
+  rsname: string;
 }
