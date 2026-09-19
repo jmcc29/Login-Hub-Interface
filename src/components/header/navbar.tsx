@@ -1,5 +1,4 @@
 import { Link } from "@heroui/link";
-import { Tooltip } from "@heroui/tooltip";
 import {
   NavbarBrand,
   NavbarContent,
@@ -25,14 +24,13 @@ export const Navbar = ({ user, environment, computerToolName }: Props) => {
       position="sticky"
     >
       <NavbarBrand>
-        <Tooltip content="Ir inicio" placement="right">
-          <Link
-            className="flex justify-start items-center gap-1"
-            href="/apphub"
-          >
-            <Logo height={30} width={80} />
-          </Link>
-        </Tooltip>
+        <Link
+          aria-label="Ir al inicio"
+          className="flex justify-start items-center gap-1"
+          href="/apphub"
+        >
+          <Logo height={30} width={80} />
+        </Link>
       </NavbarBrand>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
