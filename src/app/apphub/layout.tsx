@@ -1,13 +1,13 @@
 import { Navbar } from "@/components/header/navbar";
-import { getUserCookie } from "@/utils/helpers/cookie";
 import { getDeployEnvironment } from "@/utils/env";
+import { requireWebSession } from "@/utils/auth/session";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { data } = await getUserCookie();
+  const identity = await requireWebSession();
   const environment = getDeployEnvironment();
   const computerToolName = "HERRAMIENTA TECNOLÓGICA DE TRÁMITES";
 
@@ -16,7 +16,7 @@ export default async function Layout({
       <Navbar
         computerToolName={computerToolName}
         environment={environment}
-        user={data}
+        user={identity}
       />
       <main className="flex-1 overflow-y-auto bg-slate-50 dark:bg-neutral-950">
         <section className="flex flex-col flex-wrap h-[calc(100vh-110px)]">

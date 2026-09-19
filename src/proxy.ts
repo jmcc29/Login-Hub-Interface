@@ -1,5 +1,4 @@
 import { NextResponse, NextRequest } from "next/server";
-import { cookies } from "next/headers";
 
 const redirectTo = (req: NextRequest, pathname: string) => {
   const url = req.nextUrl.clone();
@@ -16,30 +15,35 @@ export const proxy = async (req: NextRequest) => {
     return response;
   }
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("msp")?.value;
+  const sid = req.cookies.get("sid")?.value;
   const path = req.nextUrl.pathname;
 
   try {
     if (path === "/") {
-      return token ? redirectTo(req, "/apphub") : redirectTo(req, "/login");
+      return sid
+        ? redirectTo(req, "/apphub")
+        : redirectTo(req, "/api/auth/login");
     }
 
-    if (path === "/login") {
-      return token ? redirectTo(req, "/apphub") : response;
-    }
+    const isProtected = path === "/apphub" || path.startsWith("/apphub/");
 
-    const protectedPaths = ["/apphub"];
-    const isProtected = protectedPaths.some((p) => path.startsWith(p));
-
-    if (isProtected && !token) {
-      return redirectTo(req, "/login");
+    if (isProtected && !sid) {
+      const login = req.nextUrl.clone();
+      login.pathname = "/api/auth/login";
+      login.search = "";
+      login.searchParams.set(
+        "returnPath",
+        req.nextUrl.pathname + req.nextUrl.search,
+      );
+      return NextResponse.redirect(login);
     }
 
     return response;
-  } catch (e) {
-    console.error("Error verificando token en middleware:", e);
-
-    return redirectTo(req, "/login");
+  } catch {
+    return redirectTo(req, "/auth/error");
   }
+};
+
+export const config = {
+  matcher: ["/((?!api/auth/|auth/error|_next/|favicon.ico|.*\\..*).*)"],
 };
