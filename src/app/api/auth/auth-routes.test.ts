@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { GET as callback } from "./callback/route";
 import { GET as login } from "./login/route";
+import { GET as clearInvalidSession } from "./session/invalid/route";
 
 const binding = "b".repeat(43);
 const sid = "s".repeat(43);
@@ -100,6 +101,7 @@ describe("OIDC BFF routes", () => {
   });
 
   it("sets only sid and presentation profile after a valid callback", async () => {
+    const absoluteExpiresAt = Date.now() + 480_000;
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(
@@ -114,6 +116,7 @@ describe("OIDC BFF routes", () => {
               roles: ["must-not-leak"],
             },
             sessionExpiresAt: Date.now() + 120_000,
+            sessionAbsoluteExpiresAt: absoluteExpiresAt,
             accessToken: "must-not-leak",
           },
           200,
@@ -137,6 +140,8 @@ describe("OIDC BFF routes", () => {
       path: "/",
     });
     const profile = response.cookies.get("profile");
+    expect(response.cookies.get("sid")?.maxAge).toBe(profile?.maxAge);
+    expect(response.cookies.get("sid")!.maxAge).toBeGreaterThan(400);
     expect(JSON.parse(profile!.value)).toEqual({
       sub: "person-1",
       preferredUsername: "person",
@@ -153,6 +158,86 @@ describe("OIDC BFF routes", () => {
     expect(setCookie).not.toContain("access=");
     expect(setCookie).not.toContain("must-not-leak");
     expect(setCookie).not.toContain("gateway-cookie");
+  });
+
+  it.each([undefined, null, "invalid", 1.5, Date.now() - 1])(
+    "rejects an invalid absolute session expiry without setting session cookies",
+    async (sessionAbsoluteExpiresAt) => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue(
+          jsonResponse({
+            sid,
+            returnPath: "/apphub",
+            identity: { sub: "person-1" },
+            sessionExpiresAt: Date.now() + 120_000,
+            ...(sessionAbsoluteExpiresAt === undefined
+              ? {}
+              : { sessionAbsoluteExpiresAt }),
+          }),
+        ),
+      );
+      const response = await callback(
+        new NextRequest(
+          "http://hub.test/api/auth/callback?code=code&state=state",
+          { headers: { cookie: `oidc_binding=${binding}` } },
+        ),
+      );
+      expect(response.headers.get("location")).toBe(
+        "http://hub.test/auth/error?reason=exchange_failed",
+      );
+      expect(response.cookies.get("sid")).toBeUndefined();
+      expect(response.cookies.get("profile")).toBeUndefined();
+    },
+  );
+
+  it("clears invalid session cookies before restarting login", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const response = await clearInvalidSession(
+      new NextRequest(
+        "http://hub.test/api/auth/session/invalid?returnPath=%2Fapphub%2Freports%3Fpage%3D2",
+      ),
+    );
+    expect(response.headers.get("location")).toBe(
+      "http://hub.test/api/auth/login?returnPath=%2Fapphub%2Freports%3Fpage%3D2",
+    );
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    for (const name of ["sid", "profile"]) {
+      expect(response.cookies.get(name)).toMatchObject({
+        value: "",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false,
+        path: "/",
+        maxAge: 0,
+      });
+    }
+    const repeated = await clearInvalidSession(
+      new NextRequest("http://hub.test/api/auth/session/invalid"),
+    );
+    expect(repeated.headers.get("location")).toBe(
+      "http://hub.test/api/auth/login?returnPath=%2Fapphub",
+    );
+    expect(repeated.cookies.get("sid")?.maxAge).toBe(0);
+    expect(repeated.cookies.get("profile")?.maxAge).toBe(0);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    "https://evil.test/apphub",
+    "//evil.test/apphub",
+    "/outside",
+    "/apphub%2Foutside",
+  ])("falls back safely when clearing with returnPath %s", async (value) => {
+    const response = await clearInvalidSession(
+      new NextRequest(
+        `http://hub.test/api/auth/session/invalid?returnPath=${encodeURIComponent(value)}`,
+      ),
+    );
+    expect(response.headers.get("location")).toBe(
+      "http://hub.test/api/auth/login?returnPath=%2Fapphub",
+    );
   });
 
   it.each([

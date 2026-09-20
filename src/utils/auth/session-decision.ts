@@ -6,6 +6,10 @@ export type SessionDecision =
   | { kind: "invalid" }
   | { kind: "unavailable" };
 
+export function invalidSessionRedirectPath(): string {
+  return "/api/auth/session/invalid?returnPath=/apphub";
+}
+
 export async function evaluateWebSession(
   sid: string | undefined,
   checker: typeof checkSession = checkSession,

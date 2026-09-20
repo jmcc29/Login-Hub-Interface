@@ -42,7 +42,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       browserBinding: binding,
     });
     const returnPath = normalizeReturnPath(result.returnPath);
-    const maxAge = sessionMaxAge(result.sessionExpiresAt);
+    const maxAge = sessionMaxAge(result.sessionAbsoluteExpiresAt);
     const response = NextResponse.redirect(
       new URL(returnPath, config.hubOrigin),
     );

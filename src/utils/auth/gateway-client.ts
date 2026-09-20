@@ -129,6 +129,7 @@ export async function exchangeCode(input: {
     returnPath: normalizeReturnPath(requiredString(source.returnPath)),
     identity: identity(source.identity),
     sessionExpiresAt: expiresAt(source.sessionExpiresAt),
+    sessionAbsoluteExpiresAt: expiresAt(source.sessionAbsoluteExpiresAt),
   };
 }
 

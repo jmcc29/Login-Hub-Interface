@@ -34,11 +34,11 @@ export function clearBindingCookie(config: WebAuthBffConfig): CookieDefinition {
   return { ...bindingCookie("", config), maxAge: 0 };
 }
 
-export function sessionMaxAge(
-  sessionExpiresAt: number,
-  now = Date.now(),
-): number {
-  const seconds = Math.floor((sessionExpiresAt - now) / 1000);
+export function sessionMaxAge(expiresAt: number, now = Date.now()): number {
+  if (!Number.isSafeInteger(expiresAt)) {
+    throw new Error("INVALID_SESSION_EXPIRY");
+  }
+  const seconds = Math.floor((expiresAt - now) / 1000);
   if (!Number.isSafeInteger(seconds) || seconds < 1) {
     throw new Error("INVALID_SESSION_EXPIRY");
   }
@@ -61,6 +61,10 @@ export function sidCookie(
   };
 }
 
+export function clearSidCookie(config: WebAuthBffConfig): CookieDefinition {
+  return sidCookie("", 0, config);
+}
+
 export function profileCookie(
   identity: PresentationIdentity,
   maxAge: number,
@@ -74,5 +78,17 @@ export function profileCookie(
     secure: config.secureCookies,
     path: "/",
     maxAge,
+  };
+}
+
+export function clearProfileCookie(config: WebAuthBffConfig): CookieDefinition {
+  return {
+    name: PROFILE_COOKIE,
+    value: "",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: config.secureCookies,
+    path: "/",
+    maxAge: 0,
   };
 }

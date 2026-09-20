@@ -12,6 +12,7 @@ export interface ExchangeResponse {
   returnPath: string;
   identity: PresentationIdentity;
   sessionExpiresAt: number;
+  sessionAbsoluteExpiresAt: number;
 }
 
 export interface SessionCheckResponse {

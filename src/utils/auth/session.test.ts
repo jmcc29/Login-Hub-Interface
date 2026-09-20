@@ -1,8 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
 import { GatewayAuthError } from "./gateway-client";
-import { evaluateWebSession } from "./session-decision";
+import {
+  evaluateWebSession,
+  invalidSessionRedirectPath,
+} from "./session-decision";
 
 describe("evaluateWebSession", () => {
+  it("routes invalid sessions through localized cookie cleanup", () => {
+    expect(invalidSessionRedirectPath()).toBe(
+      "/api/auth/session/invalid?returnPath=/apphub",
+    );
+  });
+
   it("accepts a server-validated session", async () => {
     const checker = vi.fn().mockResolvedValue({
       authenticated: true,
