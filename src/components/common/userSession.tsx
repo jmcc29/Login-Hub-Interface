@@ -33,6 +33,9 @@ export const UserSession = ({ username, name }: Props) => {
           <p className="font-bold text-green-700">Sesión activa</p>
           <p>{name}</p>
         </DropdownItem>
+        <DropdownItem key="logout" color="danger" href="/api/auth/logout">
+          Cerrar Sesión
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
   );

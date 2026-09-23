@@ -60,13 +60,20 @@ function expiresAt(value: unknown): number {
   return value as number;
 }
 
-async function gatewayPost(path: string, body: unknown): Promise<unknown> {
+async function gatewayPost(
+  path: string,
+  body: unknown,
+  cookie?: string,
+): Promise<unknown> {
   const config = readWebAuthBffConfig();
   let response: Response;
   try {
     response = await fetch(new URL(path, config.gatewayUrl), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(cookie ? { Cookie: cookie } : {}),
+      },
       body: JSON.stringify(body),
       cache: "no-store",
       signal: AbortSignal.timeout(4000),
@@ -91,6 +98,47 @@ async function gatewayPost(path: string, body: unknown): Promise<unknown> {
     );
   }
   return data;
+}
+
+export async function logoutSession(sid: string): Promise<string> {
+  const config = readWebAuthBffConfig();
+  let response: Response;
+  try {
+    response = await fetch(new URL("/api/auth/logout", config.gatewayUrl), {
+      method: "DELETE",
+      headers: { Cookie: `sid=${sid}` },
+      cache: "no-store",
+      signal: AbortSignal.timeout(4000),
+    });
+  } catch {
+    throw new GatewayAuthError("AUTH_SERVICE_UNAVAILABLE");
+  }
+  let data: unknown;
+  try {
+    data = await response.json();
+  } catch {
+    throw new GatewayAuthError();
+  }
+  if (!response.ok) {
+    const source = record(data);
+    const publicError = record(source.error);
+    const code = publicError.code;
+    throw new GatewayAuthError(
+      typeof code === "string" && errorCodes.has(code as GatewayErrorCode)
+        ? (code as GatewayErrorCode)
+        : "AUTH_UPSTREAM_ERROR",
+    );
+  }
+  const logoutUrl = requiredString(record(data).logoutUrl);
+  const url = new URL(logoutUrl);
+  if (
+    !["http:", "https:"].includes(url.protocol) ||
+    url.username ||
+    url.password
+  ) {
+    throw new GatewayAuthError();
+  }
+  return logoutUrl;
 }
 
 export async function startLogin(

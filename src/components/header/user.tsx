@@ -7,9 +7,6 @@ import {
   DropdownTrigger,
 } from "@heroui/dropdown";
 import { User } from "@heroui/user";
-import { useRouter } from "next/navigation";
-
-import { logout } from "@/api";
 import { User as UserInterface } from "@/utils/interfaces";
 
 interface Props {
@@ -17,13 +14,6 @@ interface Props {
 }
 
 export default function UserComponent({ user }: Props) {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
-  };
-
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -43,7 +33,7 @@ export default function UserComponent({ user }: Props) {
           <p className="font-bold">Sesión activa{/*como */}</p>
           {/* <p>@Nombre Usuario</p> */}
         </DropdownItem>
-        <DropdownItem key="logout" color="danger" onPress={handleLogout}>
+        <DropdownItem key="logout" color="danger" href="/api/auth/logout">
           Cerrar Sesión
         </DropdownItem>
       </DropdownMenu>
