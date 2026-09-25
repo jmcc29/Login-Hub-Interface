@@ -52,6 +52,49 @@ describe("Hub user context", () => {
     expect(String(init?.body)).not.toContain("clientId");
   });
 
+  it("uses a timeout longer than the Gateway context budget", async () => {
+    const timeout = vi.spyOn(AbortSignal, "timeout");
+    vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(response), {
+        status: 200,
+        headers: { "content-type": "application/json; charset=utf-8" },
+      }),
+    );
+
+    await expect(getUserContext(sid)).resolves.toEqual(response);
+    expect(timeout).toHaveBeenCalledWith(15_000);
+  });
+
+  it.each(["text/application/json", "application/jsonp", "text/plain"])(
+    "rejects an invalid response Content-Type: %s",
+    async (contentType) => {
+      vi.spyOn(global, "fetch").mockResolvedValue(
+        new Response(JSON.stringify(response), {
+          status: 200,
+          headers: { "content-type": contentType },
+        }),
+      );
+
+      await expect(getUserContext(sid)).rejects.toBeInstanceOf(
+        GatewayAuthError,
+      );
+    },
+  );
+
+  it("rejects a response body larger than 64 KiB", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({ ...response, padding: "x".repeat(65 * 1024) }),
+        {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        },
+      ),
+    );
+
+    await expect(getUserContext(sid)).rejects.toBeInstanceOf(GatewayAuthError);
+  });
+
   it("rejects a context for a different tool", async () => {
     vi.spyOn(global, "fetch").mockResolvedValue(
       new Response(

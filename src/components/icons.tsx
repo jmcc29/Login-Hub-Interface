@@ -4,7 +4,7 @@ import { IconSvgProps } from "@/utils/types";
 
 export const MuserpolLogo = () => (
   <svg className="flex flex-row w-full h-20 m-2" viewBox="0 0 200 60">
-    <image height="80" href="muserpol-logo.png" width="180" x="10" y="-8" />
+    <image height="80" href="/muserpol-logo.png" width="180" x="10" y="-8" />
   </svg>
 );
 
