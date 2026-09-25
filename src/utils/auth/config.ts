@@ -3,6 +3,7 @@ export interface WebAuthBffConfig {
   hubOrigin: URL;
   secureCookies: boolean;
   bindingTtlSeconds: number;
+  toolKey: string;
 }
 
 type Environment = Record<string, string | undefined>;
@@ -44,6 +45,10 @@ export function readWebAuthBffConfig(
   ) {
     throw new Error("Web authentication URLs must use HTTPS in production");
   }
+  const toolKey = env.AUTH_TOOL_KEY;
+  if (!toolKey || !/^[a-z][a-z0-9-]{0,63}$/.test(toolKey)) {
+    throw new Error("AUTH_TOOL_KEY is invalid");
+  }
   const bindingTtlSeconds = Number(env.AUTH_PENDING_TTL_SECONDS || "600");
   if (
     !Number.isSafeInteger(bindingTtlSeconds) ||
@@ -52,5 +57,5 @@ export function readWebAuthBffConfig(
   ) {
     throw new Error("AUTH_PENDING_TTL_SECONDS must be between 1 and 600");
   }
-  return { gatewayUrl, hubOrigin, secureCookies, bindingTtlSeconds };
+  return { gatewayUrl, hubOrigin, secureCookies, bindingTtlSeconds, toolKey };
 }

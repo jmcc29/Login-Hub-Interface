@@ -1,13 +1,13 @@
 import { Navbar } from "@/components/header/navbar";
 import { getDeployEnvironment } from "@/utils/env";
-import { requireWebSession } from "@/utils/auth/session";
+import { requireUserContext } from "@/utils/auth/session";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const identity = await requireWebSession();
+  const { identity } = await requireUserContext();
   const environment = getDeployEnvironment();
   const computerToolName = "HERRAMIENTA TECNOLÓGICA DE TRÁMITES";
 

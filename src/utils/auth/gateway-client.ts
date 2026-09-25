@@ -3,6 +3,7 @@ import {
   GatewayErrorCode,
   PresentationIdentity,
   SessionCheckResponse,
+  UserContext,
 } from "./contracts";
 import { readWebAuthBffConfig } from "./config";
 import { normalizeReturnPath } from "./return-path";
@@ -16,6 +17,8 @@ const errorCodes = new Set<GatewayErrorCode>([
   "AUTH_SERVICE_UNAVAILABLE",
   "OIDC_LOGIN_FAILED",
   "AUTH_UPSTREAM_ERROR",
+  "INVALID_CLIENT_REQUEST",
+  "WEB_TOOL_UNAVAILABLE",
 ]);
 
 export class GatewayAuthError extends Error {
@@ -176,6 +179,80 @@ export async function exchangeCode(input: {
     sid,
     returnPath: normalizeReturnPath(requiredString(source.returnPath)),
     identity: identity(source.identity),
+    sessionExpiresAt: expiresAt(source.sessionExpiresAt),
+    sessionAbsoluteExpiresAt: expiresAt(source.sessionAbsoluteExpiresAt),
+  };
+}
+
+function stringList(value: unknown): string[] {
+  if (
+    !Array.isArray(value) ||
+    value.some((item) => typeof item !== "string" || !item) ||
+    new Set(value).size !== value.length
+  )
+    throw new GatewayAuthError();
+  return [...value];
+}
+
+export async function getUserContext(sid: string): Promise<UserContext> {
+  if (!OPAQUE_ID.test(sid)) throw new GatewayAuthError("SESSION_INVALID");
+  const config = readWebAuthBffConfig();
+  const source = record(
+    await gatewayPost(
+      "/api/auth/client/context",
+      { tool: config.toolKey },
+      `sid=${sid}`,
+    ),
+  );
+  const allowed = [
+    "authenticated",
+    "currentTool",
+    "currentClient",
+    "identity",
+    "realmRoles",
+    "clientRoles",
+    "groups",
+    "permissions",
+    "contextExpiresAt",
+    "permissionsExpiresAt",
+    "sessionExpiresAt",
+    "sessionAbsoluteExpiresAt",
+  ];
+  if (
+    Object.getPrototypeOf(source) !== Object.prototype ||
+    Object.keys(source).length !== allowed.length ||
+    Object.keys(source).some((key) => !allowed.includes(key)) ||
+    source.authenticated !== true ||
+    source.currentTool !== config.toolKey ||
+    !Array.isArray(source.permissions)
+  )
+    throw new GatewayAuthError();
+  const permissions = source.permissions.map((candidate) => {
+    const permission = record(candidate);
+    if (
+      Object.getPrototypeOf(permission) !== Object.prototype ||
+      Object.keys(permission).length !== 2 ||
+      typeof permission.resource !== "string" ||
+      !permission.resource ||
+      !Array.isArray(permission.scopes)
+    )
+      throw new GatewayAuthError();
+    return {
+      resource: permission.resource,
+      scopes: stringList(permission.scopes),
+    };
+  });
+  return {
+    authenticated: true,
+    currentTool: config.toolKey,
+    currentClient: requiredString(source.currentClient),
+    identity: identity(source.identity),
+    realmRoles: stringList(source.realmRoles),
+    clientRoles: stringList(source.clientRoles),
+    groups: stringList(source.groups),
+    permissions,
+    contextExpiresAt: expiresAt(source.contextExpiresAt),
+    permissionsExpiresAt: expiresAt(source.permissionsExpiresAt),
     sessionExpiresAt: expiresAt(source.sessionExpiresAt),
     sessionAbsoluteExpiresAt: expiresAt(source.sessionAbsoluteExpiresAt),
   };

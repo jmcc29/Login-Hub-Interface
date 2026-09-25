@@ -25,6 +25,7 @@ describe("OIDC BFF routes", () => {
     vi.stubEnv("HUB_PUBLIC_ORIGIN", "http://hub.test");
     vi.stubEnv("AUTH_COOKIE_SECURE", "false");
     vi.stubEnv("AUTH_PENDING_TTL_SECONDS", "600");
+    vi.stubEnv("AUTH_TOOL_KEY", "hub");
   });
 
   afterEach(() => {

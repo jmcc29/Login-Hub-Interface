@@ -7,6 +7,7 @@ const baseEnv = {
   HUB_PUBLIC_ORIGIN: "http://hub.test",
   AUTH_COOKIE_SECURE: "false",
   AUTH_PENDING_TTL_SECONDS: "600",
+  AUTH_TOOL_KEY: "hub",
 };
 
 describe("web auth BFF configuration", () => {
