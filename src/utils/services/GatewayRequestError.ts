@@ -8,6 +8,8 @@ export const gatewayErrorCodes = [
   "AUTH_UPSTREAM_ERROR",
   "INVALID_CLIENT_REQUEST",
   "WEB_TOOL_UNAVAILABLE",
+  "WEB_CLIENT_ACCESS_DENIED",
+  "WEB_CLIENT_INVALID",
 ] as const;
 
 export type GatewayErrorCode = (typeof gatewayErrorCodes)[number];

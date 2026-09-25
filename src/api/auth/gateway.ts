@@ -119,15 +119,14 @@ function stringList(value: unknown): string[] {
   return [...value];
 }
 
-export async function getUserContext(sid: string): Promise<UserContext> {
+export async function getToolContext(
+  sid: string,
+  tool: string,
+): Promise<UserContext> {
   if (!OPAQUE_ID.test(sid)) throw new GatewayRequestError("SESSION_INVALID");
-  const config = readWebAuthBffConfig();
+  if (!/^[a-z][a-z0-9-]{0,63}$/.test(tool)) throw new GatewayRequestError();
   const source = record(
-    await gatewayPost(
-      "/api/auth/client/context",
-      { tool: config.toolKey },
-      `sid=${sid}`,
-    ),
+    await gatewayPost("/api/auth/client/context", { tool }, `sid=${sid}`),
   );
   const allowed = [
     "authenticated",
@@ -148,7 +147,7 @@ export async function getUserContext(sid: string): Promise<UserContext> {
     Object.keys(source).length !== allowed.length ||
     Object.keys(source).some((key) => !allowed.includes(key)) ||
     source.authenticated !== true ||
-    source.currentTool !== config.toolKey ||
+    source.currentTool !== tool ||
     !Array.isArray(source.permissions)
   )
     throw new GatewayRequestError();
@@ -169,7 +168,7 @@ export async function getUserContext(sid: string): Promise<UserContext> {
   });
   return {
     authenticated: true,
-    currentTool: config.toolKey,
+    currentTool: tool,
     currentClient: requiredString(source.currentClient),
     identity: identity(source.identity),
     realmRoles: stringList(source.realmRoles),
@@ -181,6 +180,10 @@ export async function getUserContext(sid: string): Promise<UserContext> {
     sessionExpiresAt: expiresAt(source.sessionExpiresAt),
     sessionAbsoluteExpiresAt: expiresAt(source.sessionAbsoluteExpiresAt),
   };
+}
+
+export async function getUserContext(sid: string): Promise<UserContext> {
+  return getToolContext(sid, readWebAuthBffConfig().toolKey);
 }
 
 export async function checkSession(sid: string): Promise<SessionCheckResponse> {
