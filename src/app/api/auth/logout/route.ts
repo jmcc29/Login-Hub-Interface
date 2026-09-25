@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { readWebAuthBffConfig } from "@/utils/auth/config";
-import { logoutSession } from "@/utils/auth/gateway-client";
+import { logoutSession } from "@/api/auth/gateway";
 import {
   clearBindingCookie,
   clearProfileCookie,

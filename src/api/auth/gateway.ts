@@ -1,41 +1,25 @@
 import {
   ExchangeResponse,
-  GatewayErrorCode,
   PresentationIdentity,
   SessionCheckResponse,
   UserContext,
-} from "./contracts";
-import { readWebAuthBffConfig } from "./config";
-import { normalizeReturnPath } from "./return-path";
+} from "@/utils/interfaces";
+import { apiClient, GatewayRequestError } from "@/utils/services";
+import { readWebAuthBffConfig } from "@/utils/auth/config";
+import { normalizeReturnPath } from "@/utils/auth/return-path";
 
 const OPAQUE_ID = /^[A-Za-z0-9_-]{43,128}$/;
-const errorCodes = new Set<GatewayErrorCode>([
-  "INVALID_LOGIN_REQUEST",
-  "LOGIN_STATE_INVALID",
-  "SESSION_INVALID",
-  "WEB_AUTH_DISABLED",
-  "AUTH_SERVICE_UNAVAILABLE",
-  "OIDC_LOGIN_FAILED",
-  "AUTH_UPSTREAM_ERROR",
-  "INVALID_CLIENT_REQUEST",
-  "WEB_TOOL_UNAVAILABLE",
-]);
-
-export class GatewayAuthError extends Error {
-  constructor(readonly code: GatewayErrorCode = "AUTH_UPSTREAM_ERROR") {
-    super("Authentication request failed");
-  }
-}
+export { GatewayRequestError as GatewayAuthError };
 
 function record(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new GatewayAuthError();
+    throw new GatewayRequestError();
   }
   return value as Record<string, unknown>;
 }
 
 function requiredString(value: unknown): string {
-  if (typeof value !== "string" || !value) throw new GatewayAuthError();
+  if (typeof value !== "string" || !value) throw new GatewayRequestError();
   return value;
 }
 
@@ -58,7 +42,7 @@ function identity(value: unknown): PresentationIdentity {
 
 function expiresAt(value: unknown): number {
   if (!Number.isSafeInteger(value) || (value as number) <= Date.now()) {
-    throw new GatewayAuthError();
+    throw new GatewayRequestError();
   }
   return value as number;
 }
@@ -68,70 +52,11 @@ async function gatewayPost(
   body: unknown,
   cookie?: string,
 ): Promise<unknown> {
-  const config = readWebAuthBffConfig();
-  let response: Response;
-  try {
-    response = await fetch(new URL(path, config.gatewayUrl), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(cookie ? { Cookie: cookie } : {}),
-      },
-      body: JSON.stringify(body),
-      cache: "no-store",
-      signal: AbortSignal.timeout(4000),
-    });
-  } catch {
-    throw new GatewayAuthError("AUTH_SERVICE_UNAVAILABLE");
-  }
-  let data: unknown;
-  try {
-    data = await response.json();
-  } catch {
-    throw new GatewayAuthError();
-  }
-  if (!response.ok) {
-    const source = record(data);
-    const publicError = record(source.error);
-    const code = publicError.code;
-    throw new GatewayAuthError(
-      typeof code === "string" && errorCodes.has(code as GatewayErrorCode)
-        ? (code as GatewayErrorCode)
-        : "AUTH_UPSTREAM_ERROR",
-    );
-  }
-  return data;
+  return apiClient.POST(path, body, cookie);
 }
 
 export async function logoutSession(sid: string): Promise<string> {
-  const config = readWebAuthBffConfig();
-  let response: Response;
-  try {
-    response = await fetch(new URL("/api/auth/logout", config.gatewayUrl), {
-      method: "DELETE",
-      headers: { Cookie: `sid=${sid}` },
-      cache: "no-store",
-      signal: AbortSignal.timeout(4000),
-    });
-  } catch {
-    throw new GatewayAuthError("AUTH_SERVICE_UNAVAILABLE");
-  }
-  let data: unknown;
-  try {
-    data = await response.json();
-  } catch {
-    throw new GatewayAuthError();
-  }
-  if (!response.ok) {
-    const source = record(data);
-    const publicError = record(source.error);
-    const code = publicError.code;
-    throw new GatewayAuthError(
-      typeof code === "string" && errorCodes.has(code as GatewayErrorCode)
-        ? (code as GatewayErrorCode)
-        : "AUTH_UPSTREAM_ERROR",
-    );
-  }
+  const data = await apiClient.DELETE("/api/auth/logout", `sid=${sid}`);
   const logoutUrl = requiredString(record(data).logoutUrl);
   const url = new URL(logoutUrl);
   if (
@@ -139,7 +64,7 @@ export async function logoutSession(sid: string): Promise<string> {
     url.username ||
     url.password
   ) {
-    throw new GatewayAuthError();
+    throw new GatewayRequestError();
   }
   return logoutUrl;
 }
@@ -162,7 +87,7 @@ export async function startLogin(
     url.password ||
     url.hash
   ) {
-    throw new GatewayAuthError();
+    throw new GatewayRequestError();
   }
   return authorizationUrl;
 }
@@ -174,7 +99,7 @@ export async function exchangeCode(input: {
 }): Promise<ExchangeResponse> {
   const source = record(await gatewayPost("/api/auth/exchange", input));
   const sid = requiredString(source.sid);
-  if (!OPAQUE_ID.test(sid)) throw new GatewayAuthError();
+  if (!OPAQUE_ID.test(sid)) throw new GatewayRequestError();
   return {
     sid,
     returnPath: normalizeReturnPath(requiredString(source.returnPath)),
@@ -190,12 +115,12 @@ function stringList(value: unknown): string[] {
     value.some((item) => typeof item !== "string" || !item) ||
     new Set(value).size !== value.length
   )
-    throw new GatewayAuthError();
+    throw new GatewayRequestError();
   return [...value];
 }
 
 export async function getUserContext(sid: string): Promise<UserContext> {
-  if (!OPAQUE_ID.test(sid)) throw new GatewayAuthError("SESSION_INVALID");
+  if (!OPAQUE_ID.test(sid)) throw new GatewayRequestError("SESSION_INVALID");
   const config = readWebAuthBffConfig();
   const source = record(
     await gatewayPost(
@@ -226,7 +151,7 @@ export async function getUserContext(sid: string): Promise<UserContext> {
     source.currentTool !== config.toolKey ||
     !Array.isArray(source.permissions)
   )
-    throw new GatewayAuthError();
+    throw new GatewayRequestError();
   const permissions = source.permissions.map((candidate) => {
     const permission = record(candidate);
     if (
@@ -236,7 +161,7 @@ export async function getUserContext(sid: string): Promise<UserContext> {
       !permission.resource ||
       !Array.isArray(permission.scopes)
     )
-      throw new GatewayAuthError();
+      throw new GatewayRequestError();
     return {
       resource: permission.resource,
       scopes: stringList(permission.scopes),
@@ -259,9 +184,9 @@ export async function getUserContext(sid: string): Promise<UserContext> {
 }
 
 export async function checkSession(sid: string): Promise<SessionCheckResponse> {
-  if (!OPAQUE_ID.test(sid)) throw new GatewayAuthError("SESSION_INVALID");
+  if (!OPAQUE_ID.test(sid)) throw new GatewayRequestError("SESSION_INVALID");
   const source = record(await gatewayPost("/api/auth/session/check", { sid }));
-  if (source.authenticated !== true) throw new GatewayAuthError();
+  if (source.authenticated !== true) throw new GatewayRequestError();
   return {
     authenticated: true,
     identity: identity(source.identity),

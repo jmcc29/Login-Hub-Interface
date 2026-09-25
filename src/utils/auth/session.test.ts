@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { GatewayAuthError } from "./gateway-client";
+import { GatewayAuthError } from "@/api/auth/gateway";
 import {
   evaluateWebSession,
   invalidSessionRedirectPath,

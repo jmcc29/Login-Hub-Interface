@@ -1,4 +1,4 @@
-import { PresentationIdentity } from "./contracts";
+import { PresentationIdentity } from "@/utils/interfaces";
 import { WebAuthBffConfig } from "./config";
 
 interface CookieDefinition {

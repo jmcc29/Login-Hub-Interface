@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { readWebAuthBffConfig } from "@/utils/auth/config";
 import { bindingCookie, clearBindingCookie } from "@/utils/auth/cookies";
-import { startLogin } from "@/utils/auth/gateway-client";
+import { startLogin } from "@/api/auth/gateway";
 import { normalizeReturnPath } from "@/utils/auth/return-path";
 
 export const dynamic = "force-dynamic";

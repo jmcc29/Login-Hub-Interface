@@ -7,7 +7,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const { identity } = await requireUserContext();
+  const context = await requireUserContext();
   const environment = getDeployEnvironment();
   const computerToolName = "HERRAMIENTA TECNOLÓGICA DE TRÁMITES";
 
@@ -16,7 +16,7 @@ export default async function Layout({
       <Navbar
         computerToolName={computerToolName}
         environment={environment}
-        user={identity}
+        context={context}
       />
       <main className="flex-1 overflow-y-auto bg-slate-50 dark:bg-neutral-950">
         <section className="flex flex-col flex-wrap h-[calc(100vh-110px)]">

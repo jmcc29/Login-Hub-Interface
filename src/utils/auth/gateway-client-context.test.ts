@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { GatewayAuthError, getUserContext } from "./gateway-client";
+import { GatewayAuthError, getUserContext } from "@/api/auth/gateway";
 
 const sid = "s".repeat(43);
 const now = Date.now();

@@ -1,1 +1,1 @@
-export { logout } from "./auth/logout";
+export * from "./auth/gateway";

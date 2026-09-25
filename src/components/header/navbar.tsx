@@ -8,14 +8,17 @@ import {
 
 import { UserSession, ThemeSwitch } from "@/components/common";
 import { Logo } from "@/components/icons";
-import { PresentationIdentity } from "@/utils/auth/contracts";
+import { UserContext } from "@/utils/interfaces";
 interface Props {
-  user: PresentationIdentity;
+  context: UserContext;
   environment: string;
   computerToolName: string;
 }
 
-export const Navbar = ({ user, environment, computerToolName }: Props) => {
+export const Navbar = ({ context, environment, computerToolName }: Props) => {
+  const { identity, groups, clientRoles } = context;
+  const username = identity.preferredUsername ?? identity.sub;
+  const name = identity.name ?? username;
   return (
     <NextUINavbar
       isBordered
@@ -57,7 +60,13 @@ export const Navbar = ({ user, environment, computerToolName }: Props) => {
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
-        <UserSession name={user?.name} username={user?.preferredUsername} />
+        <UserSession
+          clientRoles={clientRoles}
+          email={identity.email}
+          groups={groups}
+          name={name}
+          username={username}
+        />
       </NavbarContent>
     </NextUINavbar>
   );

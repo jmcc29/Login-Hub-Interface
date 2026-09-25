@@ -7,7 +7,7 @@ import {
   sessionMaxAge,
   sidCookie,
 } from "@/utils/auth/cookies";
-import { exchangeCode } from "@/utils/auth/gateway-client";
+import { exchangeCode } from "@/api/auth/gateway";
 import { normalizeReturnPath } from "@/utils/auth/return-path";
 
 export const dynamic = "force-dynamic";

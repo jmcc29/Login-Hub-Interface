@@ -2,12 +2,12 @@ import "server-only";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { PresentationIdentity, UserContext } from "./contracts";
+import { PresentationIdentity, UserContext } from "@/utils/interfaces";
 import { SID_COOKIE } from "./cookies";
 import {
   GatewayAuthError,
   getUserContext as requestUserContext,
-} from "./gateway-client";
+} from "@/api/auth/gateway";
 import { invalidSessionRedirectPath } from "./session-decision";
 
 export const requireUserContext = cache(async (): Promise<UserContext> => {

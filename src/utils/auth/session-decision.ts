@@ -1,5 +1,5 @@
-import { PresentationIdentity } from "./contracts";
-import { checkSession, GatewayAuthError } from "./gateway-client";
+import { PresentationIdentity } from "@/utils/interfaces";
+import { checkSession, GatewayAuthError } from "@/api/auth/gateway";
 
 export type SessionDecision =
   | { kind: "authenticated"; identity: PresentationIdentity }
