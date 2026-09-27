@@ -1,6 +1,5 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Link } from "@heroui/link";
 import { MuserpolLogo } from "@/components/icons";
 
 export default function AuthenticationErrorPage() {
@@ -13,9 +12,11 @@ export default function AuthenticationErrorPage() {
         </CardHeader>
         <CardBody className="gap-4 text-center">
           <p>Intenta nuevamente. Si el problema continúa, vuelve más tarde.</p>
-          <Button as={Link} color="success" href="/api/auth/login">
-            Reintentar
-          </Button>
+          <form action="/api/auth/login" method="get">
+            <Button className="w-full" color="success" type="submit">
+              Reintentar
+            </Button>
+          </form>
         </CardBody>
       </Card>
     </div>

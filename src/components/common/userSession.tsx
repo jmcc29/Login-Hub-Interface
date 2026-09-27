@@ -17,22 +17,19 @@ interface Props {
   clientRoles: readonly string[];
 }
 
-const badges = (values: readonly string[], emptyLabel: string) =>
-  values.length > 0 ? (
-    <div className="flex flex-wrap gap-1.5">
-      {values.map((value) => (
-        <span
-          key={value}
-          className="max-w-full truncate rounded-full border border-green-200 bg-green-50 px-2 py-0.5 text-xs font-medium text-green-800 dark:border-green-800 dark:bg-green-950/50 dark:text-green-200"
-          title={value}
-        >
-          {value}
-        </span>
-      ))}
-    </div>
-  ) : (
-    <p className="text-xs text-default-400">{emptyLabel}</p>
-  );
+const badges = (values: readonly string[]) => (
+  <div className="flex flex-wrap gap-1.5">
+    {values.map((value) => (
+      <span
+        key={value}
+        className="max-w-full truncate rounded-full border border-green-200 bg-green-50 px-2 py-0.5 text-xs font-medium text-green-800 dark:border-green-800 dark:bg-green-950/50 dark:text-green-200"
+        title={value}
+      >
+        {value}
+      </span>
+    ))}
+  </div>
+);
 
 export const UserSession = ({
   username,
@@ -41,6 +38,8 @@ export const UserSession = ({
   groups,
   clientRoles,
 }: Props) => {
+  const visibleRoles = clientRoles.filter((role) => role !== "user");
+
   return (
     <Dropdown placement="bottom-end">
       <DropdownTrigger>
@@ -81,32 +80,36 @@ export const UserSession = ({
             </p>
           </div>
         </DropdownItem>
-        <DropdownItem
-          key="groups"
-          isReadOnly
-          className="cursor-default py-3"
-          textValue="Grupos del usuario"
-        >
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-default-500">
-              Grupos
-            </p>
-            {badges(groups, "Sin grupos asignados")}
-          </div>
-        </DropdownItem>
-        <DropdownItem
-          key="roles"
-          isReadOnly
-          className="cursor-default py-3"
-          textValue="Roles de la herramienta"
-        >
-          <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-default-500">
-              Roles de la herramienta
-            </p>
-            {badges(clientRoles, "Sin roles asignados")}
-          </div>
-        </DropdownItem>
+        {groups.length > 0 ? (
+          <DropdownItem
+            key="groups"
+            isReadOnly
+            className="cursor-default py-3"
+            textValue="Grupos del usuario"
+          >
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-default-500">
+                Grupos
+              </p>
+              {badges(groups)}
+            </div>
+          </DropdownItem>
+        ) : null}
+        {visibleRoles.length > 0 ? (
+          <DropdownItem
+            key="roles"
+            isReadOnly
+            className="cursor-default py-3"
+            textValue="Roles de la herramienta"
+          >
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-default-500">
+                Roles de la herramienta
+              </p>
+              {badges(visibleRoles)}
+            </div>
+          </DropdownItem>
+        ) : null}
         <DropdownItem key="logout" color="danger" href="/api/auth/logout">
           Cerrar Sesión
         </DropdownItem>
