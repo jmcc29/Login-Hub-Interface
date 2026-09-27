@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToolContext } from "@/api/auth/gateway";
 import { readWebAuthBffConfig } from "@/utils/auth/config";
 import { SID_COOKIE } from "@/utils/auth/cookies";
-import { GatewayRequestError } from "@/utils/services";
+import { GatewayRequestError } from "@/utils/services/GatewayRequestError";
 import { resolveHubTool, toolPublicUrl } from "@/utils/tools";
 
 export const dynamic = "force-dynamic";
