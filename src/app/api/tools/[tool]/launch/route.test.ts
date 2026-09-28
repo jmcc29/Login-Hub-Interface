@@ -38,7 +38,9 @@ describe("tool launch route", () => {
     vi.stubEnv("AUTH_COOKIE_SECURE", "false");
     vi.stubEnv("AUTH_PENDING_TTL_SECONDS", "600");
     vi.stubEnv("AUTH_TOOL_KEY", "hub");
-    vi.stubEnv("NEXT_PUBLIC_FRONTEND_HOST", "frontend.test");
+    vi.stubEnv("BENEFICIARY_PUBLIC_ORIGIN", "https://beneficiary.test");
+    vi.stubEnv("SALES_PUBLIC_ORIGIN", "https://sales.test");
+    vi.stubEnv("COLLECTIONS_PUBLIC_ORIGIN", "https://collections.test");
   });
 
   afterEach(() => {
@@ -59,7 +61,7 @@ describe("tool launch route", () => {
 
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
-      "http://frontend.test:3002/persons",
+      "https://beneficiary.test/persons",
     );
     expect(response.headers.get("cache-control")).toBe("no-store");
     expect(response.headers.get("pragma")).toBe("no-cache");
