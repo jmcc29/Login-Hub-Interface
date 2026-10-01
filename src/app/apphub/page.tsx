@@ -22,18 +22,18 @@ export default async function AppHub({ searchParams }: Props) {
   return (
     <div className="max-w-full p-5">
       {query.notice === "access_denied" ? <AccessNotice /> : null}
-      <div className="grid grid-cols-8 gap-7">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {tools.map((tool) => (
           <Software
             key={tool.resource}
-            image={tool.image}
+            description={tool.subtitle}
+            image={`/${tool.image}`}
             name={tool.name}
-            subtitle={tool.subtitle}
             url={`/api/tools/${tool.key}/launch`}
           />
         ))}
         {tools.length === 0 ? (
-          <p className="col-span-8 text-center text-default-500">
+          <p className="text-center text-muted sm:col-span-2 lg:col-span-3">
             No tiene herramientas habilitadas.
           </p>
         ) : null}

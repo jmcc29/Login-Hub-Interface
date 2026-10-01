@@ -1,48 +1,49 @@
 "use client";
-import { Button } from "@heroui/button";
-import { Card, CardFooter, CardHeader } from "@heroui/card";
-import { Image } from "@heroui/image";
-import { Link } from "@heroui/link";
+
+import { Button, Card } from "@heroui/react";
+import Image from "next/image";
 
 interface Props {
   name: string;
-  subtitle: string;
+  description: string;
   url: string;
   image: string;
 }
 
-export default function Software({ name, subtitle, url, image }: Props) {
+export default function Software({ name, description, url, image }: Props) {
   return (
-    <Card
-      isFooterBlurred
-      className="w-full h-[300px] col-span-12 sm:col-span-2"
-    >
-      <CardHeader className="absolute z-10 top-1 flex-col items-start">
-        <p className="text-tiny text-black/60 uppercase font-bold">
-          {subtitle}
-        </p>
-        <h4 className="text-black font-medium text-2xl">{name}</h4>
-      </CardHeader>
-      <Image
-        removeWrapper
-        alt="Card example background"
-        className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-        src={image}
+    <Card className="relative flex h-full w-full max-w-md flex-col overflow-hidden border border-accent/20 bg-linear-to-br from-accent/12 via-surface to-surface-secondary shadow-lg shadow-accent/10 dark:border-accent/30 dark:from-accent/20 dark:via-surface dark:to-accent/8 dark:shadow-accent/5">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-12 -top-12 size-40 rounded-full bg-accent/20 blur-3xl dark:bg-accent/30"
       />
-      <CardFooter className="absolute bg-white/30 bottom-0 border-t border-zinc-100/50 z-10 justify-between gap-2">
+      <Card.Header className="relative flex-1 gap-3">
+        <span className="w-fit rounded-full bg-accent/15 px-2.5 py-0.5 text-xl font-black tracking-wide text-emerald-700 dark:bg-accent/25 dark:text-green-400">
+          {name}
+        </span>
+        <div className="flex items-start gap-3">
+          <Image
+            alt={name}
+            className="size-24 shrink-0 rounded-xl object-contain"
+            height={100}
+            src={image}
+            width={100}
+          />
+          <Card.Description>{description}</Card.Description>
+        </div>
+      </Card.Header>
+      <Card.Footer className="relative mt-auto">
         <Button
-          showAnchorIcon
-          aria-label="Link"
-          as={Link}
-          className="bg-white/90 min-w-10 text-lg w-full"
+          className="w-full border-3 font-bold uppercase shadow-md shadow-accent/20"
           size="md"
+          variant="secondary"
           onPress={() => {
             window.location.href = url;
           }}
         >
-          Ingresar{" "}
+          Ingresar
         </Button>
-      </CardFooter>
+      </Card.Footer>
     </Card>
   );
 }
