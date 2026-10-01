@@ -1,6 +1,6 @@
 "use client";
 
-import { addToast } from "@heroui/toast";
+import { toast } from "@heroui/react";
 import { useEffect, useRef } from "react";
 
 export function AccessNotice() {
@@ -9,13 +9,7 @@ export function AccessNotice() {
   useEffect(() => {
     if (displayed.current) return;
     displayed.current = true;
-    addToast({
-      title: "Acceso actualizado",
-      description: "Su acceso a la herramienta ya no está disponible.",
-      color: "warning",
-      timeout: 3500,
-      shouldShowTimeoutProgress: true,
-    });
+    toast.warning("Su acceso a la herramienta ya no está disponible.");
     window.history.replaceState(null, "", "/apphub");
   }, []);
 

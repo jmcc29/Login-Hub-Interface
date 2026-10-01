@@ -1,23 +1,23 @@
-import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Button, Card } from "@heroui/react";
+
 import { MuserpolLogo } from "@/components/icons";
 
 export default function AuthenticationErrorPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-stone-100 to-stone-200">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-stone-100 to-stone-200">
       <Card className="w-full max-w-md border border-gray-300 p-6">
-        <CardHeader className="flex flex-col gap-3">
+        <Card.Header className="flex flex-col gap-3">
           <MuserpolLogo />
           <h1 className="text-xl font-bold">No se pudo iniciar sesión</h1>
-        </CardHeader>
-        <CardBody className="gap-4 text-center">
+        </Card.Header>
+        <Card.Content className="gap-4 text-center">
           <p>Intenta nuevamente. Si el problema continúa, vuelve más tarde.</p>
           <form action="/api/auth/login" method="get">
-            <Button className="w-full" color="success" type="submit">
+            <Button className="w-full" type="submit" variant="primary">
               Reintentar
             </Button>
           </form>
-        </CardBody>
+        </Card.Content>
       </Card>
     </div>
   );

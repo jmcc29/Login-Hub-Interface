@@ -4,8 +4,8 @@ import {
   SessionCheckResponse,
   UserContext,
 } from "@/utils/interfaces";
-import { GatewayRequestError } from "@/utils/services/GatewayRequestError";
-import { apiClient } from "@/utils/services/GatewayServerClient";
+import { GatewayRequestError } from "@/services/GatewayRequestError";
+import { apiClient } from "@/services/GatewayServerClient";
 import { readWebAuthBffConfig } from "@/utils/auth/config";
 import { normalizeReturnPath } from "@/utils/auth/return-path";
 
