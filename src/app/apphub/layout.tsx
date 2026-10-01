@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/header/navbar";
-import { getUserCookie } from "@/utils/helpers/cookie";
+import { getUserCookie } from "@/utils/cookie";
 import { getDeployEnvironment } from "@/utils/env";
 
 export default async function Layout({

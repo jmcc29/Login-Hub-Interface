@@ -1,27 +1,19 @@
 "use client";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Input } from "@heroui/input";
-import { addToast } from "@heroui/toast";
+import { Button, Input, Card, toast } from "@heroui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { MuserpolLogo } from "@/components/icons";
-import { apiServerFrontend } from "@/utils/services";
+import { apiServerFrontend } from "@/services";
 import { getDeployEnvironment } from "@/utils/env";
 
 interface FormData {
   user: string;
   password: string;
 }
-
-const classNames = {
-  label: "text-black font-bold text-md",
-  inputWrapper: ["shadow-xl", "backdrop-blur-xl", "backdrop-saturate-200"],
-};
 
 export default function Login() {
   const router = useRouter();
@@ -100,23 +92,10 @@ export default function Login() {
         setIsLoading(true);
         router.push("/apphub");
       } else {
-        addToast({
-          title: "Error al iniciar sesión",
-          description: "Revise su usuario y contraseña",
-          color: "danger",
-          timeout: 3000,
-          shouldShowTimeoutProgress: true,
-        });
+        toast.danger(data.message);
       }
-    } catch (error) {
-      console.error(error);
-      addToast({
-        title: "Error",
-        description: "Error al iniciar sesión",
-        color: "warning",
-        timeout: 3000,
-        shouldShowTimeoutProgress: true,
-      });
+    } catch {
+      toast.danger("Hubo un error en el servicio");
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +105,7 @@ export default function Login() {
     <AnimatePresence>
       {!isAnimating && (
         <motion.div
-          className="flex items-center justify-center min-h-screen bg-gradient-to-br from-stone-100 to-stone-200"
+          className="flex items-center justify-center min-h-screen bg-linear-to-br from-stone-100 to-stone-200"
           exit={{ opacity: 0 }}
           initial={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
@@ -152,13 +131,9 @@ export default function Login() {
               initial={{ opacity: 0, x: 50 }}
               transition={{ duration: 1 }}
             >
-              <Card
-                className="w-full py-2 px-8 border-1 border-gray-300"
-                radius="none"
-                shadow="none"
-              >
+              <Card className="w-full py-2 px-8 border border-gray-300">
                 <form className="pb-5" onSubmit={handleSubmit}>
-                  <CardHeader className="flex flex-col space-y-1">
+                  <Card.Header className="flex flex-col space-y-1">
                     <MuserpolLogo />
                     <h1 className="flex flex-row text-2xl font-bold text-center">
                       Iniciar sesión
@@ -168,8 +143,8 @@ export default function Login() {
                         Versión de desarrollo
                       </p>
                     )}
-                  </CardHeader>
-                  <CardBody className="space-y-4">
+                  </Card.Header>
+                  <Card.Content className="space-y-4">
                     {accessDev && (
                       <>
                         <div className="space-y-2">
@@ -179,17 +154,12 @@ export default function Login() {
                               errors.user ? "user-error" : undefined
                             }
                             aria-invalid={!!errors.user}
-                            classNames={classNames}
-                            errorMessage="Por favor ingrese su usuario"
                             id="user"
-                            label="Usuario"
-                            labelPlacement="outside"
                             name="user"
                             placeholder="Ingrese su usuario"
                             radius="sm"
                             type="text"
                             value={formData.user}
-                            variant="flat"
                             onChange={handleInputChange}
                           />
                           {errors.user && (
@@ -205,7 +175,6 @@ export default function Login() {
                                 errors.password ? "password-error" : undefined
                               }
                               aria-invalid={!!errors.password}
-                              classNames={classNames}
                               endContent={
                                 <button
                                   className="focus:outline-hidden"
@@ -234,7 +203,6 @@ export default function Login() {
                               radius="sm"
                               type={showPassword ? "text" : "password"}
                               value={formData.password}
-                              variant="flat"
                               onChange={handleInputChange}
                             />
                           </div>
@@ -252,14 +220,13 @@ export default function Login() {
                     <div className="shadow-xl">
                       <Button
                         className="space-y-4 w-full bg-lime-700 text-white font-bold"
-                        disabled={isLoading}
+                        isDisabled={isLoading}
                         type="submit"
-                        variant="flat"
                       >
                         {isLoading ? "Iniciado sesión..." : "INICIAR SESIÓN"}
                       </Button>
                     </div>
-                  </CardBody>
+                  </Card.Content>
                 </form>
               </Card>
             </motion.div>
