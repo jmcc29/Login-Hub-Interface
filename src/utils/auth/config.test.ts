@@ -26,7 +26,7 @@ describe("web auth BFF configuration", () => {
     expect(() => readWebAuthBffConfig({ ...baseEnv, [name]: value })).toThrow();
   });
 
-  it("requires HTTPS and Secure cookies in production", () => {
+  it("requires HTTPS and Secure cookies in production by default", () => {
     expect(() =>
       readWebAuthBffConfig({ ...baseEnv, NODE_ENV: "production" }),
     ).toThrow();
@@ -39,5 +39,21 @@ describe("web auth BFF configuration", () => {
         AUTH_COOKIE_SECURE: "true",
       }),
     ).toMatchObject({ secureCookies: true });
+  });
+
+  it("allows production HTTP only through an explicit override", () => {
+    expect(
+      readWebAuthBffConfig({
+        ...baseEnv,
+        NODE_ENV: "production",
+        WEB_AUTH_ALLOW_INSECURE_HTTP: "true",
+      }),
+    ).toMatchObject({ secureCookies: false });
+    expect(() =>
+      readWebAuthBffConfig({
+        ...baseEnv,
+        WEB_AUTH_ALLOW_INSECURE_HTTP: "invalid",
+      }),
+    ).toThrow("WEB_AUTH_ALLOW_INSECURE_HTTP");
   });
 });

@@ -36,11 +36,20 @@ export function readWebAuthBffConfig(
     throw new Error("AUTH_COOKIE_SECURE must be true or false");
   }
   const secureCookies = env.AUTH_COOKIE_SECURE === "true";
-  if (env.NODE_ENV === "production" && !secureCookies) {
+  if (
+    env.WEB_AUTH_ALLOW_INSECURE_HTTP !== undefined &&
+    env.WEB_AUTH_ALLOW_INSECURE_HTTP !== "true" &&
+    env.WEB_AUTH_ALLOW_INSECURE_HTTP !== "false"
+  ) {
+    throw new Error("WEB_AUTH_ALLOW_INSECURE_HTTP must be true or false");
+  }
+  const allowInsecureHttp = env.WEB_AUTH_ALLOW_INSECURE_HTTP === "true";
+  if (env.NODE_ENV === "production" && !allowInsecureHttp && !secureCookies) {
     throw new Error("AUTH_COOKIE_SECURE must be true in production");
   }
   if (
     env.NODE_ENV === "production" &&
+    !allowInsecureHttp &&
     (gatewayUrl.protocol !== "https:" || hubOrigin.protocol !== "https:")
   ) {
     throw new Error("Web authentication URLs must use HTTPS in production");
