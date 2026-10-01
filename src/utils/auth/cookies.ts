@@ -12,6 +12,7 @@ interface CookieDefinition {
 }
 
 export const BINDING_COOKIE = "oidc_binding";
+export const OIDC_RECOVERY_COOKIE = "oidc_recovery";
 export const SID_COOKIE = "sid";
 export const PROFILE_COOKIE = "profile";
 
@@ -32,6 +33,24 @@ export function bindingCookie(
 
 export function clearBindingCookie(config: WebAuthBffConfig): CookieDefinition {
   return { ...bindingCookie("", config), maxAge: 0 };
+}
+
+export function oidcRecoveryCookie(config: WebAuthBffConfig): CookieDefinition {
+  return {
+    name: OIDC_RECOVERY_COOKIE,
+    value: "1",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: config.secureCookies,
+    path: "/api/auth",
+    maxAge: 120,
+  };
+}
+
+export function clearOidcRecoveryCookie(
+  config: WebAuthBffConfig,
+): CookieDefinition {
+  return { ...oidcRecoveryCookie(config), value: "", maxAge: 0 };
 }
 
 export function sessionMaxAge(expiresAt: number, now = Date.now()): number {

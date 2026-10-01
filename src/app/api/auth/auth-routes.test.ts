@@ -153,6 +153,11 @@ describe("OIDC BFF routes", () => {
       path: "/api/auth",
       maxAge: 0,
     });
+    expect(response.cookies.get("oidc_recovery")).toMatchObject({
+      value: "",
+      path: "/api/auth",
+      maxAge: 0,
+    });
     const setCookie = response.headers.get("set-cookie") || "";
     expect(setCookie).not.toContain("msp=");
     expect(setCookie).not.toContain("user=");
@@ -263,15 +268,43 @@ describe("OIDC BFF routes", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("clears binding when exchange rejects an absent or altered binding", async () => {
+  it("restarts login once when a valid callback arrives after binding expiry", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
     const response = await callback(
       new NextRequest("http://hub.test/api/auth/callback?code=a&state=s"),
     );
     expect(response.headers.get("location")).toBe(
-      "http://hub.test/auth/error?reason=invalid_callback",
+      "http://hub.test/api/auth/login?returnPath=%2Fapphub",
     );
     expect(response.cookies.get("oidc_binding")?.maxAge).toBe(0);
+    expect(response.cookies.get("oidc_recovery")).toMatchObject({
+      value: "1",
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/api/auth",
+      maxAge: 120,
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
 
+  it("fails closed without a loop when the recovered callback has no binding", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const response = await callback(
+      new NextRequest("http://hub.test/api/auth/callback?code=a&state=s", {
+        headers: { cookie: "oidc_recovery=1" },
+      }),
+    );
+    expect(response.headers.get("location")).toBe(
+      "http://hub.test/auth/error?reason=login_expired",
+    );
+    expect(response.cookies.get("oidc_binding")?.maxAge).toBe(0);
+    expect(response.cookies.get("oidc_recovery")?.maxAge).toBe(0);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("restarts once when Auth reports an expired or invalid login state", async () => {
     vi.stubGlobal(
       "fetch",
       vi
@@ -280,14 +313,38 @@ describe("OIDC BFF routes", () => {
           jsonResponse({ error: { code: "LOGIN_STATE_INVALID" } }, 401),
         ),
     );
-    const altered = await callback(
+    const response = await callback(
       new NextRequest("http://hub.test/api/auth/callback?code=a&state=s", {
         headers: { cookie: `oidc_binding=${"x".repeat(43)}` },
       }),
     );
-    expect(altered.headers.get("location")).toBe(
-      "http://hub.test/auth/error?reason=exchange_failed",
+    expect(response.headers.get("location")).toBe(
+      "http://hub.test/api/auth/login?returnPath=%2Fapphub",
     );
-    expect(altered.cookies.get("oidc_binding")?.maxAge).toBe(0);
+    expect(response.cookies.get("oidc_binding")?.maxAge).toBe(0);
+    expect(response.cookies.get("oidc_recovery")?.value).toBe("1");
+  });
+
+  it("does not loop when recovered exchange also reports invalid state", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValue(
+          jsonResponse({ error: { code: "LOGIN_STATE_INVALID" } }, 401),
+        ),
+    );
+    const response = await callback(
+      new NextRequest("http://hub.test/api/auth/callback?code=a&state=s", {
+        headers: {
+          cookie: `oidc_binding=${binding}; oidc_recovery=1`,
+        },
+      }),
+    );
+    expect(response.headers.get("location")).toBe(
+      "http://hub.test/auth/error?reason=login_expired",
+    );
+    expect(response.cookies.get("oidc_binding")?.maxAge).toBe(0);
+    expect(response.cookies.get("oidc_recovery")?.maxAge).toBe(0);
   });
 });
