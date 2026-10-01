@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { apiClient } from "@/utils/services";
+import { apiClient } from "@/services";
 
 export async function POST(request: Request) {
   const { username, password } = await request.json();
@@ -51,9 +51,7 @@ export async function POST(request: Request) {
     );
 
     return nextResponse;
-  } catch (error: any) {
-    console.error(error);
-
+  } catch {
     return NextResponse.json(
       { error: true, message: "Hubo un error en el servicio" },
       { status: 500 },

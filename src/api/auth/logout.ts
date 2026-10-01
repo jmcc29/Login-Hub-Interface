@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { apiClient } from "@/utils/services";
+import { apiClient } from "@/services";
 export async function logout() {
   try {
     await apiClient.GET("auth/logout");
@@ -13,9 +13,7 @@ export async function logout() {
     cookieStore.delete("msp");
     cookieStore.delete("user");
     cookieStore.delete("access");
-  } catch (error: any) {
-    console.error(error);
-
+  } catch {
     return NextResponse.json(
       { error: true, message: "Hubo un error en el servicio" },
       { status: 500 },

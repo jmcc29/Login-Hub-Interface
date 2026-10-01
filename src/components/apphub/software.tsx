@@ -1,48 +1,56 @@
 "use client";
-import { Button } from "@heroui/button";
-import { Card, CardFooter, CardHeader } from "@heroui/card";
-import { Image } from "@heroui/image";
-import { Link } from "@heroui/link";
+
+import { Button, Card } from "@heroui/react";
+import Image from "next/image";
 
 interface Props {
   name: string;
-  subtitle: string;
   url: string;
   image: string;
+  description: string;
 }
 
-export default function Software({ name, subtitle, url, image }: Props) {
+export default function Software({ name, url, image, description }: Props) {
   return (
-    <Card
-      isFooterBlurred
-      className="w-full h-[300px] col-span-12 sm:col-span-2"
-    >
-      <CardHeader className="absolute z-10 top-1 flex-col items-start">
-        <p className="text-tiny text-black/60 uppercase font-bold">
-          {subtitle}
-        </p>
-        <h4 className="text-black font-medium text-2xl">{name}</h4>
-      </CardHeader>
-      <Image
-        removeWrapper
-        alt="Card example background"
-        className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-        src={image}
+    <Card className="relative flex h-full w-full max-w-md flex-col overflow-hidden border border-accent/20 bg-linear-to-br from-accent/12 via-surface to-surface-secondary shadow-lg shadow-accent/10 dark:border-accent/30 dark:from-accent/20 dark:via-surface dark:to-accent/8 dark:shadow-accent/5">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-12 -right-12 size-40 rounded-full bg-accent/20 blur-3xl dark:bg-accent/30"
       />
-      <CardFooter className="absolute bg-white/30 bottom-0 border-t border-zinc-100/50 z-10 justify-between gap-2">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-8 -left-8 size-28 rounded-full bg-accent/10 blur-2xl dark:bg-accent/20"
+      />
+      <Card.Header className="relative flex-1 gap-3">
+        <span className="text-emerald-700 w-fit rounded-full bg-accent/15 px-2.5 py-0.5 text-xl font-black tracking-wide dark:bg-accent/25 dark:text-green-400">
+          {name}
+        </span>
+        <div className="flex items-start gap-3">
+          <Image
+            alt="Card example background"
+            className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent/15 text-accent dark:bg-accent/20 dark:text-accent-soft-foreground"
+            height={100}
+            src={image}
+            width={100}
+          />
+          <div className="flex flex-col gap-1 font-semibold">
+            <Card.Description>{description}</Card.Description>
+          </div>
+        </div>
+      </Card.Header>
+      <Card.Footer className="relative mt-auto flex-col gap-2 sm:flex-row">
         <Button
-          showAnchorIcon
           aria-label="Link"
-          as={Link}
-          className="bg-white/90 min-w-10 text-lg w-full"
+          className="w-full shadow-md shadow-accent/20 uppercase border-3 font-bold"
           size="md"
+          variant="secondary"
           onPress={() => {
             window.location.href = url;
           }}
         >
           Ingresar{" "}
         </Button>
-      </CardFooter>
+      </Card.Footer>
     </Card>
   );
 }

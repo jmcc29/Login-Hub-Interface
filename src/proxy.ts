@@ -37,9 +37,7 @@ export const proxy = async (req: NextRequest) => {
     }
 
     return response;
-  } catch (e) {
-    console.error("Error verificando token en middleware:", e);
-
+  } catch {
     return redirectTo(req, "/login");
   }
 };
